@@ -15,13 +15,13 @@ PGICH Noida PHO/BMT mobile patient-audit web app, **V5.4.1 Smart Summary UX**, r
 1. Replace the **mobile backend only** with `PHO_Mobile_V5_4_History.gs`. Keep the original installer `Code.gs` if separate.
 2. Replace HTML file **PHO_Mobile_UI** with `PHO_Mobile_UI.html` (same file name without .html in Apps Script editor).
 3. Do **not** rerun `setupPHOPatientAuditUpgrade()`, `phoRepairAndFinishSetup()`, or `phoMobileInstallV3()` merely to apply this update.
-4. Save and test first against a **nonproduction copy with fictional records**.
-5. Verify five Smart Summary periods: Today, Yesterday, 2 Days Ago, 3 Days Ago, This Month.
-6. Verify new unsaved patients show a 20 mL/hr editable IVF default, and check saved patients keep their actual rate. Confirm Today is the default and This Month uses a separate full-width button row.
-7. Validate report dates using **Asia/Kolkata**, including November 1 going back to October 31.
-8. Check totals and errors against archive rows. Monthly total is a count of **saved audits**, not unique people.
-9. Verify normal Save, Save & Next, patient-name edit handling, and patient history still work.
-10. Only after approval: **Deploy → Manage deployments → Edit existing deployment → New version → Deploy** with staff-only access.
+5. Save and test first against a **nonproduction copy with fictional records**.
+6. Verify five Smart Summary periods: Today, Yesterday, 2 Days Ago, 3 Days Ago, This Month.
+7. Verify new unsaved patients show a 20 mL/hr editable IVF default, and check saved patients keep their actual rate. Confirm Today is the default and This Month uses a separate full-width button row.
+8. Validate report dates using **Asia/Kolkata**, including November 1 going back to October 31.
+9. Check totals and errors against archive rows. Monthly total is a count of **saved audits**, not unique people.
+10. Verify normal Save, Save & Next, patient-name edit handling, and patient history still work.
+11. Only after approval: **Deploy → Manage deployments → Edit existing deployment → New version → Deploy** with staff-only access.
 
 ## Preserve data
 The history feature reads historical rows from `Patient Records` and has no migration. Do not reset or delete the existing source worksheet, archive, revision log, or Daily Summary workbook.
