@@ -3,7 +3,10 @@
 Mobile Google Apps Script + Google Sheets medication-audit workflow.
 
 ## Current version
-**V5.4.1 Smart Summary UX update** · 2026-11-04 · Apps Script client release `2026.11.04.2`
+**V5.4.2 Smart Summary silent preload** · 2026-11-04 · Apps Script client release `2026.11.04.3`
+
+### V5.4.2 refinement
+- Today displays first; Yesterday, 2 Days Ago, 3 Days Ago, and This Month preload silently while Today is visible. Periods respond immediately once loaded, without repeated server calls. Refresh always fetches new data. This is session-memory-only and does not persist patient information.
 
 ### V5.4.1 refinements
 - The final integrated HTML continues to call `phoMobileFastBootstrap()` from the existing V5.3 FastLoad script. This preserves fast startup; no compatibility adapter is required.
