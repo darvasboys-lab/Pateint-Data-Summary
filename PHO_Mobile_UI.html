@@ -2293,6 +2293,7 @@ function switchView(name){
   }
 
   if(name==='summary'){
+    phoClearWarmCache();
     // Each opening starts on Today, regardless of the last period viewed.
     smartSelectedPeriod='today';
     drawSmartPeriodButtons();
@@ -2996,34 +2997,79 @@ document.querySelectorAll('[data-smart-period]').forEach(btn=>{
   });
 });
 
-function loadSmartSummary(){
-  if(smartRequestPending||!state)return;
-  smartRequestPending=true;
-  const requested=smartSelectedPeriod;
-  $('smartCompletion').textContent='Loading saved audits…';
-  $('smartPeriodNote').textContent='';
+/* Warm previous days and month silently after Today loads.
+   Client-memory cache only; no storage and no spreadsheet writes. */
+const phoWarmCache={
+  epoch:0, ticket:0, data:Object.create(null), pending:Object.create(null)
+};
 
+function phoClearWarmCache(){
+  phoWarmCache.epoch++;
+  phoWarmCache.ticket++;
+  phoWarmCache.data=Object.create(null);
+  phoWarmCache.pending=Object.create(null);
+}
+
+function phoGetWarmPeriod(period,callback){
+  const h=phoWarmCache;
+  if(Object.prototype.hasOwnProperty.call(h.data,period)){
+    callback(null,h.data[period]);
+    return;
+  }
+  if(h.pending[period]){
+    h.pending[period].push(callback);
+    return;
+  }
+  const epoch=h.epoch;
+  h.pending[period]=[callback];
+  function finish(err,report){
+    if(epoch!==h.epoch)return;
+    const callbacks=h.pending[period]||[];
+    delete h.pending[period];
+    if(!err)h.data[period]=report;
+    callbacks.forEach(cb=>cb(err,report));
+  }
   google.script.run
-    .withSuccessHandler(data=>{
-      smartRequestPending=false;
-      if(viewMode!=='summary')return;
-      if(requested!==smartSelectedPeriod){
-        loadSmartSummary();
-        return;
-      }
-      renderSmartSummary(data);
-    })
-    .withFailureHandler(e=>{
-      smartRequestPending=false;
-      if(viewMode!=='summary')return;
-      if(requested!==smartSelectedPeriod){
-        loadSmartSummary();
-        return;
-      }
+    .withSuccessHandler(report=>finish(null,report))
+    .withFailureHandler(err=>finish(err,null))
+    .phoMobileSmartSummaryHistory(period);
+}
+
+function phoWarmPreviousPeriods(epoch){
+  if(epoch!==phoWarmCache.epoch||viewMode!=='summary')return;
+  ['month','yesterday','two_days','three_days'].forEach(period=>{
+    phoGetWarmPeriod(period,function(){});
+  });
+}
+
+function loadSmartSummary(){
+  if(!state||viewMode!=='summary')return;
+  const requested=smartSelectedPeriod;
+  const ticket=++phoWarmCache.ticket;
+  const epoch=phoWarmCache.epoch;
+
+  if(!Object.prototype.hasOwnProperty.call(phoWarmCache.data,requested)){
+    $('smartDate').textContent='—';
+    $('smartCompletion').textContent='Preparing saved audits…';
+    $('smartPeriodNote').textContent='';
+    ['smartAudited','smartPending','smartInteractions','smartErrors',
+     'smartIV','smartChemo','smartOral'].forEach(id=>$(id).textContent='—');
+    $('smartWards').replaceChildren();
+    $('smartErrorContent').replaceChildren();
+  }
+
+  phoGetWarmPeriod(requested,(err,data)=>{
+    if(ticket!==phoWarmCache.ticket||epoch!==phoWarmCache.epoch||
+       viewMode!=='summary'||requested!==smartSelectedPeriod)return;
+    if(err){
       $('smartCompletion').textContent=
-        'Unable to load summary: '+(e.message||String(e));
-    })
-    .phoMobileSmartSummaryHistory(requested);
+        'Unable to load summary: '+(err.message||String(err));
+      return;
+    }
+    renderSmartSummary(data);
+    if(requested==='today')
+      setTimeout(()=>phoWarmPreviousPeriods(epoch),50);
+  });
 }
 
 function renderSmartSummary(d){
@@ -3190,9 +3236,10 @@ $('smartBack').addEventListener('click',()=>{
   switchView('audit');
 });
 
-$('smartRefresh').addEventListener(
-  'click',loadSmartSummary
-);
+$('smartRefresh').addEventListener('click',()=>{
+  phoClearWarmCache();
+  loadSmartSummary();
+});
 
 load();
 
