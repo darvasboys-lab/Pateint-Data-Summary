@@ -1712,7 +1712,7 @@ const $=id=>document.getElementById(id);
 
 // Leave blank to use the existing release value.
 // Show the current Smart Summary History release in the launch notice.
-const PHO_DEPLOYMENT_VERSION_LABEL = 'V5.4 · History';
+const PHO_DEPLOYMENT_VERSION_LABEL = '24';
 
 function phoShowLaunchVersion() {
 
@@ -3212,6 +3212,32 @@ function renderSmartSummary(d){
   foot.textContent='Error counts mean patient audits with an error finding, not separate error events. Patient details are for authorized clinical staff only.';
   errors.appendChild(foot);
 }
+
+/* Version 24: tapping the medication-error count opens its details. */
+const phoErrorsTile = $('smartErrors').closest('.smart-stat');
+const phoErrorsDetails = $('smartErrorContent').closest('.card');
+
+phoErrorsTile.style.cursor = 'pointer';
+phoErrorsTile.title = 'View medication error details';
+phoErrorsTile.setAttribute('role', 'button');
+phoErrorsTile.setAttribute('tabindex', '0');
+phoErrorsTile.setAttribute('aria-label', 'View medication error details');
+phoErrorsTile.setAttribute('aria-controls', 'smartErrorContent');
+
+function phoOpenErrorDetails(){
+  if(viewMode !== 'summary') return;
+  phoErrorsDetails.setAttribute('tabindex', '-1');
+  phoErrorsDetails.scrollIntoView({behavior:'smooth',block:'start'});
+  phoErrorsDetails.focus({preventScroll:true});
+}
+
+phoErrorsTile.addEventListener('click', phoOpenErrorDetails);
+phoErrorsTile.addEventListener('keydown', e=>{
+  if(e.key === 'Enter' || e.key === ' '){
+    e.preventDefault();
+    phoOpenErrorDetails();
+  }
+});
 
 $('smartPatientTab').addEventListener('click',()=>{
   if(busy)return;
