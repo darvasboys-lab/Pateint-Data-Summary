@@ -1,7 +1,7 @@
 
 /**
  * PGICH PHO/BMT Medication Audit
- * V5.4 — Smart Summary History + Golden Update Notification
+ * V5.4.1 — IVF default and Smart Summary layout
  * Existing Google Sheet and patient archive are preserved.
  */
 
@@ -19,7 +19,7 @@ const PHO_MOBILE_CONFIG = Object.freeze({
 });
 
 // Increase this value for every new deployment.
-const PHO_MOBILE_RELEASE = '2026.11.04.1';
+const PHO_MOBILE_RELEASE = '2026.11.04.2';
 const PHO_PUBLISHED_RELEASE_PROPERTY = 'PHO_PUBLISHED_RELEASE';
 
 function doGet() {
