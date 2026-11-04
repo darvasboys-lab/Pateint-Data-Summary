@@ -1,3 +1,9 @@
+## Display Version 25 — Animated Smart Summary loader · 2026-11-04
+- Added a lightweight animated spinner beside the existing loading text while Smart Summary fetches a report.
+- Spinner disappears automatically on report success or failure; it changes no data, request, cache or FastLoad behavior.
+- Display label updated to 25; web-app update token advanced to 2026.11.04.4.
+- Existing Apps Script deployment still needs manual save and redeployment.
+
 # Change log
 
 All changes should be committed to this repository with a versioned commit message before a separate, explicitly authorized Apps Script deployment.
