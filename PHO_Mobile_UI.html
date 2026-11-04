@@ -998,6 +998,7 @@ button:disabled{opacity:.5;cursor:default}
       -50% 0,
       0 0;
   }
+
   73%,100% {
     background-position:
       140% 0,
@@ -1996,7 +1997,8 @@ function bedsForWard(){
   return Array.from({length:count},(_,i)=>({
     value:prefix+(i+1),
     label:String(i+1)
-  }));}
+  }));
+}
 
 function drawLocation(){
   drawWards();
@@ -2995,7 +2997,8 @@ function loadSmartSummary(){
       }
       renderSmartSummary(data);
     })
-    .withFailureHandler(e=>{      smartRequestPending=false;
+    .withFailureHandler(e=>{
+      smartRequestPending=false;
       if(viewMode!=='summary')return;
       if(requested!==smartSelectedPeriod){
         loadSmartSummary();
