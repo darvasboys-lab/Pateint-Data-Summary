@@ -6,6 +6,7 @@ Mobile Google Apps Script + Google Sheets medication-audit workflow.
 **V5.4.1 Smart Summary UX update** · 2026-11-04 · Apps Script client release `2026.11.04.2`
 
 ### V5.4.1 refinements
+- The final integrated HTML continues to call `phoMobileFastBootstrap()` from the existing V5.3 FastLoad script. This preserves fast startup; no compatibility adapter is required.
 - A new, unsaved patient form prefills **IVF Rate 20 mL/hr**; verify the patient's actual rate before saving. Previously saved records retain their recorded values.
 - Opening **Smart Summary** now starts with **Today** selected.
 - Today / Yesterday / 2 Days Ago / 3 Days Ago appear in one row; **This Month** spans its own full-width row.
@@ -22,6 +23,7 @@ The historical views read saved audits from **Patient Records** and do not modif
 ## Files
 - `PHO_Mobile_V5_4_History.gs` — complete mobile Apps Script backend
 - `PHO_Mobile_UI.html` — full client UI; create the Apps Script HTML file named `PHO_Mobile_UI`
+- `PHO_V53_FastLoad.gs` — the existing V5.3 optimized bootstrap, needed by the live mobile UI
 - `PHO_Smart_Summary_History_Offline_Preview.html` — standalone *fictional-data* demo
 - `DEPLOYMENT.md` — safe setup/update guidance
 
@@ -33,6 +35,6 @@ To avoid publishing the production Sheet ID, the GitHub version reads its target
 This GitHub repository does **not** store live patient records, and pushing a commit does **not** automatically deploy the Google Apps Script web app.
 
 ## Deployment safety
-Use the *existing* PGICH project, back up its current version, replace the mobile backend and `PHO_Mobile_UI` source only, and verify on a non-production copy first. Do **not** rerun the legacy installer or recovery function. Keep deployment access restricted to approved hospital staff.
+Use the *existing* PGICH project, back up its current version, replace the mobile backend and `PHO_Mobile_UI` source only; keep the already-installed V5.3 FastLoad script unchanged, and verify on a non-production copy first. Do **not** rerun the legacy installer or recovery function. Keep deployment access restricted to approved hospital staff.
 
 Prior versions are recoverable from Git commit history. Record each future approved update as a new versioned commit.
