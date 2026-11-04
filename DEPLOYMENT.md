@@ -1,7 +1,7 @@
 # V5.4 deployment and rollback guide
 
 ## Scope
-PGICH Noida PHO/BMT mobile patient-audit web app, **V5.4 Smart Summary History**, release `2026.11.04.1`.
+PGICH Noida PHO/BMT mobile patient-audit web app, **V5.4.1 Smart Summary UX**, release `2026.11.04.2`.
 
 **Source control and Apps Script deployment are separate.** A GitHub commit does not modify the live hospital app.
 
@@ -17,10 +17,11 @@ PGICH Noida PHO/BMT mobile patient-audit web app, **V5.4 Smart Summary History**
 3. Do **not** rerun `setupPHOPatientAuditUpgrade()`, `phoRepairAndFinishSetup()`, or `phoMobileInstallV3()` merely to apply this update.
 4. Save and test first against a **nonproduction copy with fictional records**.
 5. Verify five Smart Summary periods: Today, Yesterday, 2 Days Ago, 3 Days Ago, This Month.
-6. Validate report dates using **Asia/Kolkata**, including November 1 going back to October 31.
-7. Check totals and errors against archive rows. Monthly total is a count of **saved audits**, not unique people.
-8. Verify normal Save, Save & Next, patient-name edit handling, and patient history still work.
-9. Only after approval: **Deploy → Manage deployments → Edit existing deployment → New version → Deploy** with staff-only access.
+6. Verify new unsaved patients show a 20 mL/hr editable IVF default, and check saved patients keep their actual rate. Confirm Today is the default and This Month uses a separate full-width button row.
+7. Validate report dates using **Asia/Kolkata**, including November 1 going back to October 31.
+8. Check totals and errors against archive rows. Monthly total is a count of **saved audits**, not unique people.
+9. Verify normal Save, Save & Next, patient-name edit handling, and patient history still work.
+10. Only after approval: **Deploy → Manage deployments → Edit existing deployment → New version → Deploy** with staff-only access.
 
 ## Preserve data
 The history feature reads historical rows from `Patient Records` and has no migration. Do not reset or delete the existing source worksheet, archive, revision log, or Daily Summary workbook.
