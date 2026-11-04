@@ -1,0 +1,27 @@
+# Protected hospital data, exports, access tokens and local configuration
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+token.json
+secrets.json
+appsscript.local.json
+patient-records*
+Patient-Records*
+patient_export*
+patient-export*
+audit_export*
+audit-export*
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.sqlite
+*.db
+*.log
+.DS_Store
+node_modules/
+__pycache__/
