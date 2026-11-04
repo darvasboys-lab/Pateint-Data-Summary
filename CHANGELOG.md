@@ -2,6 +2,13 @@
 
 All changes should be committed to this repository with a versioned commit message before a separate, explicitly authorized Apps Script deployment.
 
+## Display Version 24 — Error details navigation · 2026-11-04
+- Updated the mobile opening notification label to `24`.
+- Made the Smart Summary medication-error statistics tile clickable and keyboard accessible; selecting it scrolls to the existing medication-error detail section of the current report.
+- Preserved the existing individual daily error findings and monthly category breakdown; no additional patient information was requested or stored.
+- On future user-approved deployments, increment the displayed version label to `25`, `26`, etc. It is a deliberate code value, not an automatically readable Apps Script deployment number.
+- No sheet changes or backend modifications.
+
 ## V5.4.2 — Smart Summary silent preload · 2026-11-04
 - Once Today renders, start all four historical period requests silently in the background.
 - Store responses only in the current page's memory; switching periods after preload has completed needs no new server call.
