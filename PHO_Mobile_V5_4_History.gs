@@ -1,7 +1,7 @@
 
 /**
  * PGICH PHO/BMT Medication Audit
- * V5.2 — Smart Summary + Golden Update Notification
+ * V5.4 — Smart Summary History + Golden Update Notification
  * Existing Google Sheet and patient archive are preserved.
  */
 
@@ -998,6 +998,7 @@ function phoMobileStartToday(){
       const draft=v.slice(1,13).some(function(x){
         return x!==''&&x!==null&&x!==false;
       });
+
       const pendingSave=v[13]===true;
 
       const pendingMetadata=!!(
