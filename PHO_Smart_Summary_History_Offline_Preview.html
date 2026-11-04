@@ -1753,7 +1753,7 @@ window.google={script:{get run(){
   const handler={
     withSuccessHandler(fn){yes=fn;return handler;},
     withFailureHandler(fn){no=fn;return handler;},
-    phoMobileBootstrap(){setTimeout(()=>yes(JSON.parse(JSON.stringify(exampleState))),0);return handler;},
+    phoMobileFastBootstrap(){setTimeout(()=>yes(JSON.parse(JSON.stringify(exampleState))),0);return handler;},
     phoMobileSmartSummaryHistory(period){setTimeout(()=>yes(report(period)),0);return handler;},
     phoMobileCheckUpdate(){setTimeout(()=>yes({release:'2026.11.04.2',url:''}),0);return handler;}
   };
@@ -2433,7 +2433,7 @@ phoShowLaunchVersion();
         'Cannot open audit: ' +
         (e.message || String(e));
     })
-    .phoMobileBootstrap();
+    .phoMobileFastBootstrap();
 }
 
 
