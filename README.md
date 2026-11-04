@@ -3,7 +3,12 @@
 Mobile Google Apps Script + Google Sheets medication-audit workflow.
 
 ## Current version
-**V5.4 Smart Summary History** · 2026-11-04 · Apps Script client release `2026.11.04.1`
+**V5.4.1 Smart Summary UX update** · 2026-11-04 · Apps Script client release `2026.11.04.2`
+
+### V5.4.1 refinements
+- A new, unsaved patient form prefills **IVF Rate 20 mL/hr**; verify the patient's actual rate before saving. Previously saved records retain their recorded values.
+- Opening **Smart Summary** now starts with **Today** selected.
+- Today / Yesterday / 2 Days Ago / 3 Days Ago appear in one row; **This Month** spans its own full-width row.
 
 ### Smart Summary periods
 - Today
