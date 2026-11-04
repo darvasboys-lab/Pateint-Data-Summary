@@ -1706,7 +1706,7 @@ const $=id=>document.getElementById(id);
 
 // Leave blank to use the existing release value.
 // Show the current Smart Summary History release in the launch notice.
-const PHO_DEPLOYMENT_VERSION_LABEL = '24';
+const PHO_DEPLOYMENT_VERSION_LABEL = '25';
 
 function phoShowLaunchVersion() {
 
@@ -3232,6 +3232,41 @@ phoErrorsTile.addEventListener('keydown', e=>{
     phoOpenErrorDetails();
   }
 });
+
+/* PGICH: animated Smart Summary loading status (visual only).
+   Watches the existing status text; does not change any server calls. */
+(function(){
+  const status=$('smartCompletion');
+  if(!status)return;
+  const style=document.createElement('style');
+  style.textContent=`
+    #smartCompletion.pho-loading{
+      display:flex;align-items:center;gap:9px;
+      color:#287d68;font-weight:700;
+    }
+    #smartCompletion.pho-loading::before{
+      content:"";width:17px;height:17px;flex:none;
+      box-sizing:border-box;
+      border:2px solid #cae7dc;border-top-color:#188a68;
+      border-radius:50%;
+      animation:phoSummarySpin .75s linear infinite;
+    }
+    @keyframes phoSummarySpin{to{transform:rotate(360deg)}}
+    @media (prefers-reduced-motion:reduce){
+      #smartCompletion.pho-loading::before{animation:none}
+    }
+  `;
+  document.head.appendChild(style);
+  function syncSpinner(){
+    const loading=/\\b(?:loading|preparing)\\b/i.test(status.textContent);
+    status.classList.toggle('pho-loading',loading);
+    status.setAttribute('aria-busy',String(loading));
+  }
+  new MutationObserver(syncSpinner).observe(status,{
+    childList:true,subtree:true,characterData:true
+  });
+  syncSpinner();
+})();
 
 $('smartPatientTab').addEventListener('click',()=>{
   if(busy)return;
