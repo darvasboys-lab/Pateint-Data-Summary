@@ -1106,13 +1106,17 @@ button:disabled{opacity:.5;cursor:default}
 
 
 /* Smart Summary history — compact, scrollable and touch friendly */
-.smart-periods{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+/* Four daily choices in one row; monthly overview on its own wide row. */
+.smart-periods{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
   gap:7px;padding:3px 1px 10px;margin:13px -2px 2px}
-.smart-period{min-width:0;min-height:40px;padding:8px 4px;border-radius:12px;
+.smart-period{min-width:0;min-height:44px;padding:8px 3px;border-radius:12px;
   background:#ffffffbb;border:1px solid #dce9e8;color:#5e7986;
-  font-size:11.5px;font-weight:750;white-space:normal}
-.smart-period:nth-child(-n+3){grid-column:span 2}
-.smart-period:nth-child(n+4){grid-column:span 3}
+  font-size:10.8px;line-height:1.2;font-weight:750;white-space:normal}
+.smart-period[data-smart-period="month"]{grid-column:1 / -1;min-height:54px;
+  font-size:14px;font-weight:850;letter-spacing:.01em;
+  border-radius:14px;background:#f1f6f4}
+.smart-period[data-smart-period="month"][aria-pressed="true"]{
+  background:linear-gradient(135deg,#d5f0e3,#e9f7ef)}
 .smart-period[aria-pressed="true"]{background:#d9f0e6;border-color:#9ed0b5;
   color:#156c4e;box-shadow:0 2px 7px #236b4820}
 .smart-period:focus-visible{outline:2px solid #147c57;outline-offset:2px}
@@ -1375,6 +1379,7 @@ button:disabled{opacity:.5;cursor:default}
             <button id="ivfPlus" type="button"
                     class="step-btn">+</button>
           </div>
+          <div class="note">New entries start at 20 mL/hr. Verify the actual rate before saving.</div>
         </div>
       </div>
 
@@ -1750,7 +1755,7 @@ window.google={script:{get run(){
     withFailureHandler(fn){no=fn;return handler;},
     phoMobileBootstrap(){setTimeout(()=>yes(JSON.parse(JSON.stringify(exampleState))),0);return handler;},
     phoMobileSmartSummaryHistory(period){setTimeout(()=>yes(report(period)),0);return handler;},
-    phoMobileCheckUpdate(){setTimeout(()=>yes({release:'2026.11.04.1',url:''}),0);return handler;}
+    phoMobileCheckUpdate(){setTimeout(()=>yes({release:'2026.11.04.2',url:''}),0);return handler;}
   };
   return handler;
 }}};
@@ -1768,7 +1773,7 @@ document.addEventListener('click',function(e){
 'use strict';
 
 const PHO_CLIENT_RELEASE =
-  "2026.11.04.1";
+  "2026.11.04.2";
 
 const $=id=>document.getElementById(id);
 
@@ -1901,6 +1906,14 @@ function clone(r){
   KEYS.forEach(k=>{
     o[k]=r[k]||'';
   });
+
+  // A new, unsaved patient starts at 20 mL/hr. This is only a form
+  // default, not a saved clinical measurement; the operator must verify it.
+  // Existing records (including 0 and an intentionally blank value)
+  // always retain their saved IVF rate.
+  if(!r.recordId && r.status!=='Saved' && o.ivf===''){
+    o.ivf='20';
+  }
 
   return o;
 }
@@ -2351,6 +2364,9 @@ function switchView(name){
   }
 
   if(name==='summary'){
+    // Each opening starts on Today, regardless of the last period viewed.
+    smartSelectedPeriod='today';
+    drawSmartPeriodButtons();
     loadSmartSummary();
   }
 
