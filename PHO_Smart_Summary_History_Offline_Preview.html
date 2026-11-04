@@ -1,0 +1,3257 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base target="_top">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eaf1f5">
+<title>PHO / BMT Medication Audit</title>
+
+<style>
+:root{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#193850;background:#eaf1f5;font-size:15px
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-width:300px;min-height:100vh;
+  background:
+    radial-gradient(ellipse at 5% 12%,#dceaf2 0,transparent 36%),
+    radial-gradient(ellipse at 92% 55%,#f6e8df 0,transparent 43%),
+    linear-gradient(165deg,#e8f1f5,#f6f5f2 62%,#e8f0ee)
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+[hidden]{display:none!important}
+.app{
+  max-width:520px;margin:auto;padding:12px 12px 105px;
+  position:relative
+}
+.glass{
+  background:linear-gradient(
+    145deg,rgba(255,255,255,.76),rgba(255,255,255,.44)
+  );
+  border:1px solid rgba(255,255,255,.96);
+  border-radius:21px;
+  box-shadow:
+    0 9px 26px rgba(51,78,98,.09),
+    inset 0 2px 0 rgba(255,255,255,.95);
+  -webkit-backdrop-filter:blur(24px) saturate(155%);
+  backdrop-filter:blur(24px) saturate(155%)
+}
+.hero{
+  height:122px;padding:22px 15px;position:relative;
+  overflow:hidden;margin-bottom:10px;display:flex;align-items:center
+}
+.hero h1{
+  font-size:21px;line-height:1.12;letter-spacing:-.035em;
+  margin:0 0 7px;position:relative;z-index:1;
+  max-width:76%;font-weight:800;color:#163850
+}
+.hero small{
+  position:relative;z-index:1;font-size:12px;color:#638195
+}
+.hero .shadow-child{
+  position:absolute;right:1px;bottom:-4px;width:145px;
+  height:119px;opacity:.19;fill:#8c91bc;pointer-events:none
+}
+.gear{
+  position:absolute;right:12px;top:12px;width:34px;height:34px;
+  border:1px solid #ffffffeb;background:#ffffff90;color:#4f6f80;
+  border-radius:50%;z-index:2;font-size:17px
+}
+.card{padding:15px;margin:0 0 10px}
+.card-title{
+  font-size:15px;font-weight:800;margin:0 0 12px;color:#244459
+}
+.row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px
+}
+.muted{font-size:11px;color:#6c8694}
+.minor{font-size:12px;color:#597889}
+.label{
+  display:block;font-size:12px;font-weight:750;color:#4b6a7c;
+  margin:0 0 7px
+}
+.field{margin:0 0 13px}
+.field:last-child{margin-bottom:0}
+.patient{
+  font-size:28px;font-weight:850;letter-spacing:-.04em;
+  color:#1d3a50
+}
+.date{
+  font-size:15px;font-weight:750;color:#51788e;
+  white-space:nowrap;margin-top:2px
+}
+.percent{font-size:21px;font-weight:850;color:#168965}
+.progress{
+  height:11px;overflow:hidden;border-radius:15px;
+  background:#dfe9ea;margin:12px 0
+}
+.fill{
+  background:linear-gradient(90deg,#6dc69a,#15936b);
+  height:100%;width:0;transition:width .25s
+}
+.pill{
+  font-size:11px;font-weight:750;color:#8a6437;
+  background:#f7efdbaa;padding:6px 9px;border-radius:20px
+}
+.pill.saved{color:#177450;background:#ddf5e8}
+.error-count{font-size:11px;color:#698390}
+.input{
+  border-radius:13px;border:1.4px solid #ffffffeb;
+  background:#ffffffe0;box-shadow:0 2px 8px #4060780a;
+  min-height:47px;width:100%;padding:9px 12px;
+  color:#183c52;outline-offset:2px
+}
+.input:focus{outline:2px solid #7ebda4}
+.input::placeholder{color:#8aa0a9}
+.nav-card{padding:11px 15px}
+.nav-line{
+  display:grid;grid-template-columns:1fr minmax(83px,1.22fr) 1fr;
+  gap:8px;align-items:center
+}
+.nav-side{
+  height:53px;border:1px solid #ffffffed;border-radius:13px;
+  background:#ffffffa4;color:#47677b;font-weight:800;font-size:12px
+}
+.jump-wrap{text-align:center;position:relative}
+.jump-label{
+  display:block;font-size:9px;font-weight:800;letter-spacing:.03em;
+  color:#498368;margin-bottom:4px
+}
+.jump-number{
+  width:100%;height:53px;text-align:center;border:1px solid #bce1ce;
+  border-radius:13px;background:#e2f3e9e8;color:#147d57;
+  font-size:24px;font-weight:850;appearance:textfield;
+  -moz-appearance:textfield;padding:0
+}
+.jump-number::-webkit-inner-spin-button,
+.jump-number::-webkit-outer-spin-button{
+  -webkit-appearance:none;margin:0
+}
+
+.ward-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px
+}
+.ward-btn{
+  border-radius:14px;min-height:83px;
+  background:
+    linear-gradient(145deg,#ffffff83,#ffffff12),
+    var(--tone);
+  border:1.5px solid #ffffffea;
+  box-shadow:
+    inset 0 2px 0 #ffffffd8,
+    0 4px 12px #425e6810;
+  color:#173750;min-width:0;padding:7px 3px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:5px
+}
+.ward-btn .ward-symbol{
+  width:23px;height:23px;stroke:var(--ward-ic);fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 2px 2px #44608022)
+}
+.ward-btn strong{
+  font-size:14px;line-height:1.15;font-weight:850;color:#173750;
+  background:transparent;border:0;box-shadow:none;
+  text-shadow:none;padding:0
+}
+.ward-btn small{
+  font-size:10px;font-weight:650;color:#547286
+}
+.ward-btn.selected{
+  outline:2px solid #8297df;outline-offset:-2px;
+  box-shadow:inset 0 2px 0 #fff,0 5px 14px #536fbd17
+}
+.ward-btn:focus-visible,
+.cube:focus-visible,
+.bed:focus-visible,
+.choice:focus-visible,
+.err-tile:focus-visible{
+  outline:2px solid #137c57;outline-offset:2px
+}
+
+.cubes{
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:5px
+}
+.cube{
+  height:57px;border-radius:11px;border:1px solid #ffffffeb;
+  background:var(--tone);font-size:19px;font-weight:850;
+  color:#554a42;min-width:0
+}
+.cube.selected{
+  outline:2px solid #178c62;outline-offset:-2px;color:#137a56
+}
+.beds{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px
+}
+.bed{
+  min-height:49px;border:1px solid #ffffffeb;border-radius:12px;
+  background:linear-gradient(145deg,#f5f5f3,#ebece8);
+  color:#354d60;font-size:14px;font-weight:800
+}
+.bed.selected{
+  background:#deeee7;color:#25684e;
+  outline:2px solid #9bcab7;outline-offset:-2px
+}
+.bed-cubic{
+  background:linear-gradient(145deg,#ffffff99,#ffffff28),var(--tone)
+}
+.note{font-size:11px;color:#708896;margin-top:8px}
+.legacy{
+  background:#fff5e7a8;color:#8b5d2d;padding:10px;
+  border-radius:11px;font-size:12px;margin-top:9px
+}
+.step{
+  display:grid;grid-template-columns:65px minmax(0,1fr) 65px;
+  gap:7px;align-items:center
+}
+.step-btn{
+  height:54px;border:1px solid #ffffffef;border-radius:13px;
+  background:#f3f8fcec;color:#30648a;font-size:29px;font-weight:400
+}
+.step-input{
+  height:54px;border:1px solid #ffffffee;border-radius:13px;
+  width:100%;background:#ffffffb8;text-align:center;
+  font-size:23px;font-weight:850;color:#1c3752;
+  appearance:textfield;-moz-appearance:textfield
+}
+.step-input::-webkit-inner-spin-button,
+.step-input::-webkit-outer-spin-button{
+  -webkit-appearance:none;margin:0
+}
+.yn{
+  display:grid;grid-template-columns:1fr 1fr;gap:9px
+}
+.choice{
+  min-height:50px;border-radius:12px;background:#ffffffb3;
+  color:#617d8d;border:1px solid #fff;
+  font-size:14px;font-weight:800
+}
+
+/*
+ IV medicines, chemotherapy, oral medicines:
+ YES green, NO red.
+ Drug interaction, medication error:
+ YES red, NO green.
+*/
+.choice.good{
+  background:#e0f5e9;color:#197954;border-color:#c7e8d7
+}
+.choice.bad{
+  background:#fde8e8;color:#a83d45;border-color:#f2d2d2
+}
+.choice.good.selected{
+  background:#bcebd3;color:#116b46;
+  border:2px solid #1e9565;
+  box-shadow:0 0 0 2px #1e95651e inset
+}
+.choice.bad.selected{
+  background:#f8cbcb;color:#a52d38;
+  border:2px solid #cb5560;
+  box-shadow:0 0 0 2px #cb55601b inset
+}
+.err-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px
+}
+.err-tile{
+  min-height:54px;border-radius:12px;border:1px solid #ffffffea;
+  background:#ffffffb8;color:#34556b;font-size:12px;
+  font-weight:750;padding:7px 4px;line-height:1.25
+}
+.err-tile.selected{
+  background:#fae1e1;border:1.5px solid #dc7377;color:#a93542
+}
+.err-panel{
+  background:#fff6f5ac;padding:12px;border-radius:14px;
+  border:1px solid #f0cdca;margin-top:11px
+}
+.red{color:#b13d48}
+.message{
+  border-radius:12px;padding:12px;margin:0 0 10px;
+  background:#edf7fbd8;color:#36667f;
+  font-size:12px;font-weight:650
+}
+.message.error{background:#fff0ee;color:#a73540}
+.message.success{background:#e2f5e9;color:#167650}
+.actionbar{
+  position:fixed;z-index:5;bottom:0;left:0;right:0;
+  background:#edf5f5ec;border-top:1px solid #ffffffd7;
+  -webkit-backdrop-filter:blur(18px);
+  backdrop-filter:blur(18px);
+  padding:9px 12px max(11px,env(safe-area-inset-bottom))
+}
+.action-inner{
+  max-width:496px;margin:auto;display:grid;
+  grid-template-columns:.85fr 1.7fr;gap:9px
+}
+.save{
+  border:1px solid #fff;border-radius:15px;min-height:53px;
+  background:#d9f5ecca;color:#126b4c;font-weight:850
+}
+.save-next{
+  border:1px solid #ffffff9a;border-radius:15px;min-height:53px;
+  background:linear-gradient(140deg,#1aaf7b,#117f56);
+  color:white;font-weight:850;
+  box-shadow:0 7px 16px #258b6330;font-size:14px
+}
+.section-title{
+  font-weight:800;font-size:22px;margin:0 0 5px
+}
+.setting-list .setting-item{
+  display:flex;gap:7px;align-items:center;
+  justify-content:space-between;padding:9px;
+  border:1px solid #ffffffef;background:#ffffffe0;
+  border-radius:10px;margin-bottom:7px
+}
+.setting-text{font-size:13px;overflow-wrap:anywhere}
+.minibtn{
+  border:1px solid #cdddde;background:#fff;border-radius:8px;
+  min-height:38px;padding:7px 9px;font-size:11px;
+  color:#3e6475;font-weight:750
+}
+.danger{color:#b03c43}
+.settings-form{
+  margin-top:13px;border-top:1px solid #d5e6e8;
+  padding-top:12px
+}
+.back{
+  min-height:48px;width:100%;background:#dff3ea;
+  color:#14754f;border:1px solid #a6d9bd;
+  border-radius:13px;font-weight:850
+}
+
+/* Golden update notification */
+.update-line{
+  display:flex;justify-content:flex-end;
+  margin:-1px 2px 10px
+}
+.update-link{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:7px;max-width:100%;min-height:35px;
+  border:1px solid #e7c36d;border-radius:999px;
+  padding:7px 11px;
+  background:linear-gradient(135deg,#fff7e5,#f8e2a4);
+  color:#795216;font-size:11px;font-weight:850;
+  text-decoration:none;
+  box-shadow:
+    0 3px 12px #a37f241b,
+    inset 0 1px 0 #fffdf3
+}
+.update-sparkle{
+  font-size:14px;color:#b88726;line-height:1
+}
+.update-action{
+  color:#7b5110;border-left:1px solid #d4b46a;
+  padding-left:8px;white-space:nowrap
+}
+.update-link:focus-visible{
+  outline:2px solid #977022;outline-offset:3px
+}
+
+/* Smart Summary */
+.smart-tabs{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6px;margin:0 0 10px;padding:5px;
+  border:1px solid #fff;border-radius:16px;
+  background:#ffffff8a;
+  box-shadow:0 5px 17px #36546b0b
+}
+.smart-tab{
+  min-height:44px;border:0;border-radius:11px;
+  background:transparent;color:#648393;
+  font-weight:780;font-size:13px
+}
+.smart-tab.active{
+  background:linear-gradient(140deg,#d9f0e5,#edf7f0);
+  color:#237756;
+  box-shadow:0 3px 9px #678d7a21
+}
+.smart-summary-title{
+  font-size:23px;font-weight:850;letter-spacing:-.035em;
+  margin:3px 0;color:#23435b
+}
+.smart-kicker{
+  font-size:10px;font-weight:800;letter-spacing:.08em;
+  color:#73919e;text-transform:uppercase
+}
+.smart-stats{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:8px;margin-bottom:10px
+}
+.smart-stat{
+  border:1px solid #fff;border-radius:14px;
+  background:#ffffff9c;padding:14px 12px;min-height:93px
+}
+.smart-stat-label{
+  font-size:11px;font-weight:700;color:#668292
+}
+.smart-stat-value{
+  font-size:27px;font-weight:850;color:#244459;
+  margin-top:5px;letter-spacing:-.035em
+}
+.smart-stat-value.mint{color:#238965}
+.smart-stat-value.ruby{color:#b34d59}
+.smart-meter{
+  height:10px;border-radius:15px;background:#dfeae8;
+  overflow:hidden;margin:12px 0 7px
+}
+.smart-meter-bar{
+  height:100%;background:linear-gradient(90deg,#7ad0a0,#239e72);
+  border-radius:15px;transition:width .2s
+}
+.smart-line{
+  display:flex;justify-content:space-between;gap:8px;
+  align-items:center;padding:10px 0;
+  border-bottom:1px solid #e2eaeb;font-size:12px
+}
+.smart-line:last-child{border-bottom:0}
+.smart-wardrow{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) .6fr .6fr;
+  gap:8px;align-items:center;
+  border-bottom:1px solid #e2eaeb;
+  padding:10px 0;font-size:12px
+}
+.smart-wardrow:last-child{border-bottom:0}
+.smart-wardrow strong,
+.smart-wardrow span:nth-child(n+2){text-align:right}
+.smart-subtle{
+  font-size:11px;line-height:1.5;color:#74909e
+}
+.smart-error-head{
+  border:1px solid #f1d0ce;background:#fce7e4bd;
+  color:#a04550;border-radius:13px;
+  display:flex;gap:12px;align-items:center;
+  padding:12px;margin-bottom:12px
+}
+.smart-error-head strong{
+  font-size:26px;line-height:1
+}
+.smart-error-head span{
+  font-size:11px;font-weight:750
+}
+.smart-finding{
+  background:#fffaf8c9;border:1px solid #eedbd4;
+  border-radius:13px;padding:12px;margin:9px 0
+}
+.smart-finding strong{
+  font-size:12px;color:#a25151
+}
+.smart-finding p{
+  font-size:11px;line-height:1.55;color:#5d7786;
+  margin:7px 0 0;white-space:pre-wrap;
+  overflow-wrap:anywhere
+}
+.smart-zero{
+  background:#e4f5eb;border:1px solid #bde1cb;
+  padding:18px;text-align:center;border-radius:13px;
+  font-size:13px;font-weight:750;color:#2a7955
+}
+.smart-try{
+  width:100%;margin-top:12px;min-height:43px;
+  border:1px solid #b9dccb;border-radius:12px;
+  background:#e2f3e9;color:#277553;font-weight:800
+}
+
+@media(max-width:370px){
+  .hero h1{font-size:19px}
+  .hero{height:112px}
+  .ward-btn{min-height:80px}
+  .ward-btn strong{font-size:12px}
+  .card{padding:12px}
+  .cubes{gap:4px}
+  .cube{height:53px}
+  .step{
+    grid-template-columns:57px minmax(0,1fr) 57px
+  }
+  .nav-side{font-size:11px}
+}
+
+/* =========================================
+   PHO / BMT — CHAMPAGNE GOLD HEADER
+   Visual styling only — no data changes
+   ========================================= */
+
+.hero {
+  background:
+    radial-gradient(
+      ellipse at 82% 48%,
+      rgba(241,216,158,.16),
+      transparent 39%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.89),
+      rgba(255,252,245,.57)
+    );
+
+  border-color:rgba(218,193,144,.56);
+
+  box-shadow:
+    0 8px 25px rgba(63,77,95,.08),
+    inset 0 2px 0 rgba(255,255,255,.97);
+}
+
+/* Fine golden line across the top */
+.hero::before {
+  content:'';
+  position:absolute;
+  top:0;
+  left:17%;
+  right:17%;
+  height:2px;
+
+  background:linear-gradient(
+    90deg,
+    transparent,
+    #b78a3c,
+    #f5e5b3,
+    #b78a3c,
+    transparent
+  );
+
+  pointer-events:none;
+}
+
+/* Gentle golden halo behind children */
+.hero::after {
+  content:'';
+  position:absolute;
+  right:13px;
+  bottom:4px;
+  width:150px;
+  height:99px;
+  border-radius:50%;
+
+  background:radial-gradient(
+    ellipse,
+    rgba(236,202,125,.34),
+    rgba(246,228,190,.15) 45%,
+    transparent 74%
+  );
+
+  filter:blur(5px);
+  pointer-events:none;
+}
+
+/* Keep text above the decorative glow */
+.hero > div:first-child {
+  position:relative;
+  z-index:1;
+  width:72%;
+  min-width:0;
+}
+
+.hero h1 {
+  max-width:100%;
+}
+
+/* PHO / BMT golden typography */
+.hero .hero-gold {
+  display:block;
+  color:#a4772d;
+
+  background:linear-gradient(
+    110deg,
+    #80591d 3%,
+    #bd913f 24%,
+    #edd8a1 44%,
+    #956a24 61%,
+    #c9a151 82%,
+    #866022 100%
+  );
+
+  background-size:190% 100%;
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  animation:phoGoldShine 8s ease-in-out infinite alternate;
+}
+
+/* Medication Audit remains easy to read */
+.hero .hero-title-rest {
+  display:block;
+  color:#24465c;
+  font-size:.84em;
+  letter-spacing:-.025em;
+  font-weight:750;
+  margin-top:2px;
+}
+
+/* Preserve original children silhouette */
+.hero .shadow-child {
+  z-index:1;
+  opacity:.29;
+  fill:#7990aa;
+
+  filter:drop-shadow(
+    0 0 6px rgba(207,161,77,.48)
+  );
+}
+
+/* Small gold accent inside original artwork */
+.hero .shadow-child path:nth-last-of-type(2) {
+  fill:#c49a56;
+}
+
+/* Slow, subtle shine */
+@keyframes phoGoldShine {
+  from {
+    background-position:0% 50%;
+  }
+
+  to {
+    background-position:100% 50%;
+  }
+}
+
+/* Accessibility: respect reduced-motion settings */
+@media (prefers-reduced-motion:reduce) {
+  .hero .hero-gold {
+    animation:none;
+  }
+}
+
+
+/* =====================================================
+   PHO/BMT — FINAL APPROVED VISUAL PATCH
+   CSS ONLY — NO DATA OR JAVASCRIPT CHANGES
+   ===================================================== */
+
+/* 1. Individual ward colours */
+
+.ward-btn:nth-child(1) {
+  --edge:#8885cb;
+  --glow:#8885cb50;
+  --ink:#514b94;
+}
+
+.ward-btn:nth-child(2) {
+  --edge:#50a587;
+  --glow:#50a58750;
+  --ink:#236d53;
+}
+
+.ward-btn:nth-child(3) {
+  --edge:#c99d49;
+  --glow:#c99d4955;
+  --ink:#77551e;
+}
+
+.ward-btn:nth-child(4) {
+  --edge:#619bc8;
+  --glow:#619bc850;
+  --ink:#2b638d;
+}
+
+.ward-btn:nth-child(5) {
+  --edge:#c782a0;
+  --glow:#c782a050;
+  --ink:#974b6a;
+}
+
+.ward-btn:nth-child(6) {
+  --edge:#c2829e;
+  --glow:#c2829e50;
+  --ink:#974b6a;
+}
+
+/* 2. Individual cubicle colours */
+
+.cube:nth-child(1) {
+  --edge:#c3a46d;
+  --glow:#c3a46d50;
+  --ink:#81612c;
+}
+
+.cube:nth-child(2) {
+  --edge:#67ae80;
+  --glow:#67ae8050;
+  --ink:#36764b;
+}
+
+.cube:nth-child(3) {
+  --edge:#7c9dd0;
+  --glow:#7c9dd050;
+  --ink:#456da0;
+}
+
+.cube:nth-child(4) {
+  --edge:#d49b76;
+  --glow:#d49b7650;
+  --ink:#946144;
+}
+
+.cube:nth-child(5) {
+  --edge:#9e8aca;
+  --glow:#9e8aca50;
+  --ink:#69549a;
+}
+
+.cube:nth-child(6) {
+  --edge:#cb8ca5;
+  --glow:#cb8ca550;
+  --ink:#90516c;
+}
+
+/* 3. Unselected ward names ALWAYS readable */
+
+.ward-btn:not(.selected) strong {
+  color:#203e55 !important;
+  -webkit-text-fill-color:#203e55 !important;
+  background:transparent !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+.ward-btn:not(.selected) small {
+  color:#526d7d !important;
+  -webkit-text-fill-color:#526d7d !important;
+  opacity:1 !important;
+}
+
+/* 4. Colour-matched lustrous selection */
+
+.ward-btn.selected,
+.cube.selected,
+.bed.selected {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+
+  outline:2px solid var(--edge,#91a5b0);
+  outline-offset:-2px;
+  border-color:var(--edge,#91a5b0);
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffffe0 0%,
+      #ffffff55 34%,
+      #ffffff00 68%,
+      #ffffff44 100%
+    ),
+    var(--tone,#efefed);
+
+  box-shadow:
+    inset 0 2px 1px #ffffffed,
+    0 4px 13px var(--glow,#91a5b040);
+}
+
+.ward-btn.selected strong,
+.ward-btn.selected small {
+  position:relative;
+  z-index:1;
+  color:var(--ink,#203e55) !important;
+  -webkit-text-fill-color:
+    var(--ink,#203e55) !important;
+  opacity:1 !important;
+  background:transparent !important;
+}
+
+.cube.selected {
+  color:var(--ink,#354d60);
+}
+
+/* PHO beds inherit their cubicle tone */
+
+.bed.bed-cubic.selected {
+  --edge:color-mix(
+    in srgb,
+    var(--tone) 58%,
+    #647f95
+  );
+
+  --glow:color-mix(
+    in srgb,
+    var(--tone) 48%,
+    transparent
+  );
+
+  color:#354d60;
+}
+
+/* Other beds: neutral lustrous silver */
+
+.bed:not(.bed-cubic).selected {
+  --edge:#91a5b0;
+  --glow:#91a5b040;
+  color:#354d60;
+}
+
+/* =====================================================
+   5. YES / NO — FINAL APPROVED CLINICAL COLOURS
+   ===================================================== */
+
+/* Unselected unfavourable option: PURE WHITE */
+
+.choice.bad:not(.selected) {
+  background:#ffffff;
+  color:#526c7b;
+  border:1px solid #dfe8eb;
+  box-shadow:none;
+}
+
+/* Selected unfavourable option:
+   Flat soft ruby, NO gradient and NO red glow */
+
+.choice.bad.selected {
+  background:#f9e6e9;
+  color:#90394b;
+  border:2px solid #b96372;
+  box-shadow:
+    inset 0 1px 0 #ffffff99;
+}
+
+/* Selected favourable option: emerald glass */
+
+.choice.good.selected {
+  position:relative;
+  overflow:hidden;
+
+  background:linear-gradient(
+    130deg,
+    #f5fff9 0%,
+    #bcebd3 32%,
+    #79d5a6 68%,
+    #c5f1db 100%
+  );
+
+  color:#155b3e;
+  border:2px solid #259568;
+
+  box-shadow:
+    inset 0 2px 0 #ffffffc9,
+    0 4px 11px #24956835;
+}
+
+/* =====================================================
+   6. MOVING GLISTENING REFLECTION
+   Selected wards, cubicles, beds and green buttons
+   ===================================================== */
+
+.ward-btn.selected::before,
+.cube.selected::before,
+.bed.selected::before,
+.choice.good.selected::before {
+  content:'';
+  position:absolute;
+  top:3px;
+  left:5px;
+  right:5px;
+  height:32%;
+  border-radius:8px;
+
+  background:linear-gradient(
+    180deg,
+    #ffffff91,
+    transparent
+  );
+
+  pointer-events:none;
+}
+
+.ward-btn.selected::after,
+.cube.selected::after,
+.bed.selected::after,
+.choice.good.selected::after {
+  content:'';
+  position:absolute;
+  top:-20%;
+  bottom:-20%;
+  left:0;
+  width:25%;
+
+  transform:
+    translateX(-220%) skewX(-22deg);
+
+  background:linear-gradient(
+    90deg,
+    transparent,
+    #ffffff9b,
+    transparent
+  );
+
+  animation:
+    phoSelectedGlisten 5.2s ease-in-out infinite;
+
+  pointer-events:none;
+}
+
+@keyframes phoSelectedGlisten {
+  0%,53% {
+    transform:
+      translateX(-220%) skewX(-22deg);
+  }
+
+  76%,100% {
+    transform:
+      translateX(590%) skewX(-22deg);
+  }
+}
+
+/* =====================================================
+   7. EMERALD MIST — PATIENT INPUT FIELDS
+   Patient Name, Patient ID, Clinical Pharmacist
+   ===================================================== */
+
+#patientName,
+#patientId,
+#pharmacist {
+  color:#183e53;
+  font-weight:700;
+
+  border:1.5px solid #b9daca;
+  border-radius:14px;
+
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      #ffffff45 27%,
+      #bceec878 50%,
+      #ffffffc9 62%,
+      transparent 100%
+    ),
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f4fff8 55%,
+      #e8f8ef 100%
+    );
+
+  background-size:
+    30% 100%,
+    100% 100%;
+
+  background-repeat:no-repeat;
+
+  background-position:
+    -50% 0,
+    0 0;
+
+  box-shadow:
+    inset 0 2px 0 #fffffffa,
+    0 3px 10px #4566780a;
+
+  animation:
+    phoInputGlisten 5.8s ease-in-out infinite;
+
+  transition:
+    border-color .2s,
+    box-shadow .2s;
+}
+
+/* Stagger the moving reflection */
+
+#patientName {
+  animation-delay:0s;
+}
+
+#patientId {
+  animation-delay:-3.4s;
+}
+
+#pharmacist {
+  animation-delay:-1.7s;
+}
+
+/* Emerald focus glow */
+
+#patientName:focus,
+#patientId:focus,
+#pharmacist:focus {
+  border-color:#2d9872;
+
+  outline:2px solid #2d987280;
+  outline-offset:2px;
+
+  box-shadow:
+    inset 0 2px 0 #ffffff,
+    0 0 0 3px #4eac7c20,
+    0 5px 16px #4eac7c29;
+}
+
+/* Readable placeholders */
+
+#patientName::placeholder,
+#patientId::placeholder {
+  color:#839e96;
+  opacity:1;
+}
+
+/* Moving silver-emerald light */
+
+@keyframes phoInputGlisten {
+  0%,49% {
+    background-position:
+      -50% 0,
+      0 0;
+  }
+
+  73%,100% {
+    background-position:
+      140% 0,
+      0 0;
+  }
+}
+
+/* =====================================================
+   8. ACCESSIBILITY AND KEYBOARD FOCUS
+   ===================================================== */
+
+.ward-btn.selected:focus-visible,
+.cube.selected:focus-visible,
+.bed.selected:focus-visible,
+.choice.selected:focus-visible,
+.err-tile.selected:focus-visible {
+  outline:3px solid #175f50;
+  outline-offset:2px;
+}
+
+/* Respect reduced-motion preference */
+
+@media (prefers-reduced-motion:reduce) {
+  .ward-btn.selected::after,
+  .cube.selected::after,
+  .bed.selected::after,
+  .choice.good.selected::after {
+    animation:none;
+  }
+
+  #patientName,
+  #patientId,
+  #pharmacist {
+    animation:none;
+  }
+}
+
+
+/* ===========================================
+   PHO/BMT — OPENING VERSION FLASH
+   + DEVELOPER CREDIT
+   CSS ONLY
+   =========================================== */
+
+.pho-launch-flash {
+  position:fixed;
+  inset:0;
+  z-index:30;
+  display:grid;
+  place-items:center;
+  background:rgba(232,241,245,.18);
+  pointer-events:none;
+}
+
+.pho-launch-flash[hidden] {
+  display:none !important;
+}
+
+.pho-launch-card {
+  width:min(310px,calc(100% - 48px));
+  border-radius:19px;
+  border:1px solid #e9d6ac;
+  padding:20px 18px;
+  text-align:center;
+
+  background:linear-gradient(
+    145deg,
+    #ffffffef,
+    #f5fff8ea
+  );
+
+  box-shadow:
+    0 13px 36px #42607724,
+    inset 0 2px 0 #ffffff;
+
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+}
+
+.pho-launch-mark {
+  color:#ae8541;
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.09em;
+  margin-bottom:7px;
+}
+
+.pho-launch-title {
+  color:#245842;
+  font-size:17px;
+  font-weight:850;
+  line-height:1.4;
+  overflow-wrap:anywhere;
+}
+
+/* Tiny developer credit at page bottom */
+.pho-credit {
+  margin:15px auto 8px;
+  text-align:center;
+  color:#82959b;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.025em;
+}
+
+
+/* Smart Summary history — compact, scrollable and touch friendly */
+.smart-periods{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:7px;padding:3px 1px 10px;margin:13px -2px 2px}
+.smart-period{min-width:0;min-height:40px;padding:8px 4px;border-radius:12px;
+  background:#ffffffbb;border:1px solid #dce9e8;color:#5e7986;
+  font-size:11.5px;font-weight:750;white-space:normal}
+.smart-period:nth-child(-n+3){grid-column:span 2}
+.smart-period:nth-child(n+4){grid-column:span 3}
+.smart-period[aria-pressed="true"]{background:#d9f0e6;border-color:#9ed0b5;
+  color:#156c4e;box-shadow:0 2px 7px #236b4820}
+.smart-period:focus-visible{outline:2px solid #147c57;outline-offset:2px}
+.smart-history-note{font-size:11px;line-height:1.5;color:#678293;margin-top:6px}
+.smart-daily-list{max-height:385px;overflow-y:auto}
+.smart-daily-row{display:grid;grid-template-columns:1.45fr .75fr .75fr;
+  gap:8px;align-items:center;padding:11px 0;border-bottom:1px solid #e2eaea;
+  font-size:12px}
+.smart-daily-row:last-child{border:0}
+.smart-daily-row strong:nth-child(n+2){text-align:right}
+.smart-daily-row.empty{opacity:.6}
+
+</style>
+</head>
+
+<body>
+
+<svg width="0" height="0" aria-hidden="true"
+     style="position:absolute;overflow:hidden">
+<defs>
+  <symbol id="pho-icon-dna" viewBox="0 0 24 24">
+    <path d="M6 2c13 4-1 16 12 20M18 2C5 6 19 18 6 22M7 5h10M8 10h8M8 14h8M7 19h10"/>
+  </symbol>
+  <symbol id="pho-icon-bone" viewBox="0 0 24 24">
+    <path d="M5 9a3 3 0 1 1 4-4l6 6a3 3 0 1 1 4 4 3 3 0 1 1-4 4l-6-6a3 3 0 1 1-4-4Z"/>
+  </symbol>
+  <symbol id="pho-icon-sun" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="4"/>
+    <path d="M12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M20 4l-2 2M6 18l-2 2M20 18l-2-2"/>
+  </symbol>
+  <symbol id="pho-icon-building" viewBox="0 0 24 24">
+    <rect x="5" y="2" width="14" height="20" rx="1"/>
+    <path d="M9 6h1m4 0h1M9 10h1m4 0h1M9 14h1m4 0h1M11 22v-4h2v4M2 22h20"/>
+  </symbol>
+  <symbol id="pho-icon-bed" viewBox="0 0 24 24">
+    <path d="M3 5v16m0-4h18v4m-18-9h18v5M7 8h4v4H7zM13 10h8v2h-8"/>
+  </symbol>
+</defs>
+</svg>
+
+<style>
+.demo-preview-ribbon{max-width:520px;margin:12px auto 0;padding:11px 13px;
+  background:#fff4d9;border:1px solid #e6bf78;border-radius:12px;
+  color:#76541f;font:700 12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+</style>
+<div class="demo-preview-ribbon">Offline interactive preview · Fictional numbers only · Not connected to hospital Google Sheets. Data entry and Save are disabled.</div>
+
+<div class="app">
+
+  <header class="hero glass">
+    <div>
+      
+<h1>
+  <span class="hero-gold">PHO / BMT</span>
+  <span class="hero-title-rest">Medication Audit</span>
+</h1>
+<small>Paediatric Medication Audit</small>
+
+    </div>
+
+    <svg class="shadow-child" viewBox="0 0 180 140"
+         aria-hidden="true" focusable="false">
+      <circle cx="66" cy="73" r="17"/>
+      <path d="M49 68c-6-7-1-13 5-12l3-6 7 5 8-3 7 7-3 8c-9-9-19-7-27 1Z"/>
+      <path d="M49 91c6-10 29-10 35 0l8 21-12 8-4-13 1 22H43l3-22-5 13-11-7Z"/>
+      <path d="M42 122c-12-2-19 6-17 12h27l7-12Zm36 0c11-1 20 4 21 12H72l-7-12Z"/>
+      <circle cx="123" cy="44" r="16"/>
+      <path d="M107 41c-7-12 2-24 12-22l8-7 8 8 9 4-3 15c-9-8-18-8-34 2Z"/>
+      <path d="M111 64c-11 7-14 20-13 29l-8 27h65l-9-30c-1-13-8-22-15-26Z"/>
+      <path d="M108 71 93 85 80 78l-6 8 20 14 22-17Z"/>
+      <path d="M135 70 149 45l7-5 4 6-4 8-14 28Z"/>
+      <path d="M112 118v20h11l3-20Zm22 0 4 20h10l-4-20Z"/>
+      <path d="m160 18 3 8 9 1-7 6 2 9-7-5-8 5 2-9-7-6 10-1Z"/>
+      <path d="M35 53c-9-9-16 1-9 7l9 8 9-8c7-7-1-16-9-7Z" opacity=".55"/>
+    </svg>
+
+    <button type="button" class="gear"
+            id="settingsButton"
+            aria-label="Default Settings">⚙</button>
+  </header>
+
+  <div class="update-line" id="phoUpdateBanner" hidden>
+    <a class="update-link" id="phoUpdateLink"
+       target="_top" rel="noopener" href="#"
+       aria-label="New update is available">
+      <span class="update-sparkle">✦</span>
+      <span>New update is available</span>
+      <span class="update-action">Update now ›</span>
+    </a>
+  </div>
+
+  <nav class="smart-tabs" role="tablist"
+       aria-label="Audit sections">
+    <button type="button" id="smartPatientTab"
+            class="smart-tab active" role="tab"
+            aria-controls="auditScreen"
+            aria-selected="true">
+      Patient Audit
+    </button>
+
+    <button type="button" id="smartSummaryTab"
+            class="smart-tab" role="tab"
+            aria-controls="smartSummaryScreen"
+            aria-selected="false">
+      ▤ Smart Summary
+    </button>
+  </nav>
+
+  <div class="glass card" id="loading">
+    Opening patient checklist…
+  </div>
+
+  <div class="message" id="notice" hidden
+       role="status" aria-live="polite"></div>
+
+  <main id="main" hidden>
+
+    <section id="auditScreen">
+
+      <div class="glass card">
+        <div class="row">
+          <div>
+            <div class="patient">
+              Patient <span id="patientNumber">1</span>
+            </div>
+            <div class="date" id="auditDate">—</div>
+          </div>
+
+          <div style="text-align:right">
+            <div class="percent" id="percent">0%</div>
+            <div class="muted" id="savedCount">
+              0 of 70 saved
+            </div>
+          </div>
+        </div>
+
+        <div class="progress">
+          <div class="fill" id="progressFill"></div>
+        </div>
+
+        <div class="row">
+          <span id="recordStatus" class="pill">
+            Not saved
+          </span>
+          <span id="errorCount" class="error-count">
+            0 errors recorded
+          </span>
+        </div>
+      </div>
+
+      <div class="glass nav-card" style="margin-bottom:10px">
+        <div class="nav-line">
+          <button class="nav-side" id="prev"
+                  type="button">‹ Previous</button>
+
+          <div class="jump-wrap">
+            <label for="jump" class="jump-label">
+              JUMP TO PATIENT
+            </label>
+
+            <input id="jump" class="jump-number"
+                   type="number" inputmode="numeric"
+                   min="1" max="70" step="1" value="1">
+          </div>
+
+          <button class="nav-side" id="next"
+                  type="button">Next ›</button>
+        </div>
+      </div>
+
+      <div id="dayBanner" class="message error" hidden></div>
+
+      <button id="startToday" class="back"
+              type="button" hidden
+              style="margin-bottom:10px">
+        Start today's audit
+      </button>
+
+      <div class="glass card">
+        <label class="card-title" for="pharmacist">
+          Clinical Pharmacist
+        </label>
+
+        <select class="input" id="pharmacist"></select>
+
+        <button id="confirmHandover"
+                class="back"
+                style="margin-top:10px"
+                type="button" hidden>
+          Confirm pharmacist handover
+        </button>
+      </div>
+
+      <div class="glass card">
+        <div class="card-title">Patient details</div>
+
+        <div class="field">
+          <label for="patientName" class="label">
+            Patient Name *
+          </label>
+          <input id="patientName" class="input" type="text"
+                 maxlength="150"
+                 placeholder="Enter patient name"
+                 autocomplete="off">
+        </div>
+
+        <div class="field">
+          <label for="patientId" class="label">
+            Patient ID *
+          </label>
+          <input id="patientId" class="input" type="text"
+                 inputmode="numeric" pattern="[0-9]*"
+                 maxlength="50"
+                 placeholder="Enter numeric ID"
+                 autocomplete="off">
+        </div>
+
+        <div class="field">
+          <div class="label">Ward Selection *</div>
+          <div class="ward-grid" id="wardTiles"
+               role="group" aria-label="Ward"></div>
+        </div>
+
+        <div id="cubicSection" class="field" hidden>
+          <div class="label">Cubicle Selection *</div>
+          <div class="cubes" id="cubicTiles"
+               role="group" aria-label="Cubicles"></div>
+        </div>
+
+        <div id="bedSection" class="field" hidden>
+          <div class="row" style="margin-bottom:8px">
+            <span class="label" style="margin:0">
+              Bed Selection *
+            </span>
+            <span id="bedHint" class="muted"></span>
+          </div>
+
+          <div class="beds" id="bedTiles"
+               role="group" aria-label="Beds"></div>
+        </div>
+
+        <div class="field">
+          <div class="row" style="margin-bottom:9px">
+            <label for="ivfRate" class="label"
+                   style="margin:0">
+              IVF Rate (mL/hr) *
+            </label>
+            <span class="muted">Step 20 mL/hr</span>
+          </div>
+
+          <div class="step">
+            <button id="ivfMinus" type="button"
+                    class="step-btn">−</button>
+
+            <input id="ivfRate" class="step-input"
+                   type="number" inputmode="decimal"
+                   min="0" max="200" step="any"
+                   placeholder="—">
+
+            <button id="ivfPlus" type="button"
+                    class="step-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass card">
+        <div class="card-title">
+          Medication checklist
+        </div>
+
+        <div class="field">
+          <div class="label">IV medications</div>
+          <div class="yn" data-question="iv"></div>
+        </div>
+
+        <div class="field">
+          <div class="label">IV chemotherapy</div>
+          <div class="yn" data-question="chemo"></div>
+        </div>
+
+        <div class="field">
+          <div class="label">Oral medications</div>
+          <div class="yn" data-question="oral"></div>
+        </div>
+      </div>
+
+      <div class="glass card">
+        <div class="field">
+          <div class="label">
+            Drug interaction identified?
+          </div>
+          <div class="yn" data-question="interaction"></div>
+        </div>
+
+        <div class="field">
+          <div class="label">
+            Medication error identified?
+          </div>
+          <div class="yn" data-question="error"></div>
+        </div>
+
+        <div id="errorDetails" class="err-panel" hidden>
+          <div class="card-title red">
+            Medication Error — Error Code *
+          </div>
+
+          <div id="errorTiles" class="err-grid"></div>
+
+          <div class="field" style="margin-top:13px">
+            <label for="details" class="label">
+              Error identified / Concerned person *
+            </label>
+
+            <textarea id="details" class="input"
+                      rows="3" maxlength="1000"
+                      placeholder="Describe the error and concerned person"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="muted"
+           style="text-align:center;margin:11px 4px">
+        Saved patients remain in Patient Records.
+        Previous and Next allow corrections.
+      </div>
+
+    </section>
+
+    <section id="smartSummaryScreen" hidden>
+
+      <div class="glass card">
+        <div class="smart-kicker" id="smartKicker">
+          Daily clinical report · saved audits only
+        </div>
+
+        <div class="smart-summary-title">
+          Smart Summary
+        </div>
+
+        <div class="minor" id="smartDate">—</div>
+
+        <div class="smart-periods" role="group"
+             aria-label="Select Smart Summary period">
+          <button type="button" class="smart-period" data-smart-period="today"
+                  aria-pressed="true">Today</button>
+          <button type="button" class="smart-period" data-smart-period="yesterday"
+                  aria-pressed="false">Yesterday</button>
+          <button type="button" class="smart-period" data-smart-period="two_days"
+                  aria-pressed="false">2 Days Ago</button>
+          <button type="button" class="smart-period" data-smart-period="three_days"
+                  aria-pressed="false">3 Days Ago</button>
+          <button type="button" class="smart-period" data-smart-period="month"
+                  aria-pressed="false">This Month</button>
+        </div>
+        <div id="smartPeriodNote" class="smart-history-note" role="status"></div>
+
+        <div class="smart-meter">
+          <div id="smartMeter"
+               class="smart-meter-bar"
+               style="width:0"></div>
+        </div>
+
+        <div class="smart-subtle"
+             id="smartCompletion">
+          Loading saved audits…
+        </div>
+      </div>
+
+      <div class="smart-stats">
+        <div class="smart-stat">
+          <div class="smart-stat-label" id="smartAuditedLabel">
+            Patients audited
+          </div>
+          <div id="smartAudited"
+               class="smart-stat-value mint">—</div>
+        </div>
+
+        <div class="smart-stat">
+          <div class="smart-stat-label" id="smartPendingLabel">
+            Pending audits
+          </div>
+          <div id="smartPending"
+               class="smart-stat-value">—</div>
+        </div>
+
+        <div class="smart-stat">
+          <div class="smart-stat-label">
+            Drug interaction findings
+          </div>
+          <div id="smartInteractions"
+               class="smart-stat-value">—</div>
+        </div>
+
+        <div class="smart-stat">
+          <div class="smart-stat-label" id="smartErrorsLabel">
+            Patients with medication errors
+          </div>
+          <div id="smartErrors"
+               class="smart-stat-value ruby">—</div>
+        </div>
+      </div>
+
+      <div class="glass card">
+        <div class="card-title">
+          Medication Usage Summary
+        </div>
+
+        <div class="smart-line">
+          <span>IV medications · YES</span>
+          <strong id="smartIV">—</strong>
+        </div>
+
+        <div class="smart-line">
+          <span>IV chemotherapy · YES</span>
+          <strong id="smartChemo">—</strong>
+        </div>
+
+        <div class="smart-line">
+          <span>Oral medications · YES</span>
+          <strong id="smartOral">—</strong>
+        </div>
+
+        <div class="smart-subtle" style="margin-top:10px">
+          Counts include saved patient audits only.
+        </div>
+      </div>
+
+      <div class="glass card">
+        <div class="card-title">
+          Ward-wise Audit Summary
+        </div>
+
+        <div class="smart-wardrow smart-subtle">
+          <span>WARD</span>
+          <strong>AUDITED</strong>
+          <strong>ERRORS</strong>
+        </div>
+
+        <div id="smartWards"></div>
+      </div>
+
+      <div class="glass card">
+        <div class="card-title">
+          Medication Error Summary
+        </div>
+        <div id="smartErrorContent"></div>
+      </div>
+
+      <div class="glass card" id="smartMonthlyDaily" hidden>
+        <div class="card-title">Daily breakdown · This Month</div>
+        <div class="smart-daily-row smart-subtle">
+          <span>DATE</span><strong>SAVED</strong><strong>ERRORS</strong>
+        </div>
+        <div id="smartDailyList" class="smart-daily-list"></div>
+        <div class="smart-subtle" style="margin-top:10px">
+          Days without saved records appear as 0, not as confirmed missed audits.
+        </div>
+      </div>
+
+      <button type="button" class="back" id="smartBack">
+        ← Back to Patient Audit
+      </button>
+
+      <button type="button" class="smart-try"
+              id="smartRefresh">
+        Refresh summary
+      </button>
+
+    </section>
+
+    <section id="settingsScreen" hidden>
+      <div class="glass card">
+        <div class="section-title">
+          Default Settings
+        </div>
+        <div class="minor">
+          Manage approved lists. The six ward and bed
+          patterns in this version are fixed; patient
+          history is not erased when a list choice is removed.
+        </div>
+      </div>
+
+      <div class="glass card">
+        <label for="settingsCategory" class="label">
+          Setting category
+        </label>
+
+        <select id="settingsCategory" class="input">
+          <option value="pharmacist">Clinical Pharmacist</option>
+          <option value="ward">Ward list</option>
+          <option value="cubic">Cubicle list</option>
+          <option value="bed">Bed list</option>
+          <option value="ivf">Legacy IVF list</option>
+          <option value="errorCode">Medication Error Codes</option>
+        </select>
+
+        <div class="card-title" id="settingsListTitle"
+             style="margin-top:16px">
+          Clinical Pharmacist
+        </div>
+
+        <div class="setting-list"
+             id="settingsList"></div>
+
+        <div class="settings-form">
+          <div class="label" id="settingsActionTitle">
+            Add new option
+          </div>
+
+          <input id="settingsValue" class="input"
+                 maxlength="100"
+                 placeholder="Type option">
+
+          <div id="bedScopeField" class="field" hidden
+               style="margin-top:12px">
+            <label for="bedScope" class="label">
+              Cubicle assignment
+            </label>
+            <select id="bedScope" class="input"></select>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <button id="settingsSave" class="save-next"
+                    type="button"
+                    style="padding:0 15px;flex:1">
+              Add option
+            </button>
+
+            <button id="settingsCancel" class="nav-side"
+                    type="button">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button id="settingsDone" class="back" type="button">
+        ← Return to Patient Audit
+      </button>
+    </section>
+
+
+  </main>
+
+  <!-- Small developer credit -->
+  <footer class="pho-credit">
+    Developed by Dr Aman Singh
+  </footer>
+
+</div>
+
+<!-- Brief opening notification -->
+<div id="phoLaunchFlash"
+     class="pho-launch-flash"
+     hidden
+     role="status"
+     aria-live="polite">
+
+  <div class="pho-launch-card">
+
+    <div class="pho-launch-mark">
+      ✦ PHO / BMT ✦
+    </div>
+
+    <div id="phoLaunchVersion"
+         class="pho-launch-title">
+    </div>
+
+  </div>
+
+</div>
+
+<div class="actionbar" id="actionbar" hidden>
+
+  <div class="action-inner">
+    <button id="saveOnly" class="save"
+            type="button">
+      Save
+    </button>
+    <button id="saveNext" class="save-next"
+            type="button">
+      Save &amp; Next Patient ›
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+const today='2026-11-04';
+const empty=(n)=>({number:n,ward:'',cubic:'',bed:'',patientId:'',patientName:'',ivf:'',iv:'',chemo:'',oral:'',interaction:'',error:'',errorCode:'',details:'',status:'',savedAt:'',recordId:'',recordedBy:'',signature:'0'.repeat(64)});
+const exampleState={date:today,today,pharmacist:'Demo Pharmacist',
+  options:{ward:['PHO','BMT','Daycare','4th Floor','Private I','Private II'],
+    cubic:['A','B','C','D','E','F','N/A'],
+    bed:[{name:'A1',cubicle:'A'},{name:'A2',cubicle:'A'}],
+    ivf:['0','20','40'],errorCode:['Prescription error','Administration error'],
+    pharmacist:['Demo Pharmacist']},
+  rows:Array.from({length:70},(_,i)=>empty(i+1))};
+function report(period){
+  const periods={
+    today:['Today','2026-11-04',35,3,4,16,3,25,12],
+    yesterday:['Yesterday','2026-11-03',56,4,5,24,8,33,18],
+    two_days:['2 Days Ago','2026-11-02',62,1,2,35,4,38,22],
+    three_days:['3 Days Ago','2026-11-01',49,3,6,27,6,31,18],
+    month:['This Month','2026-11-01 to 2026-11-04',202,11,17,102,21,127,70]
+  };
+  const p=periods[period]||periods.today;
+  const month=period==='month';
+  const wards=[
+    {ward:'PHO',audited:Math.round(p[2]*.51),errors:Math.round(p[3]*.6)},
+    {ward:'BMT',audited:Math.round(p[2]*.24),errors:Math.round(p[3]*.2)},
+    {ward:'Daycare',audited:Math.round(p[2]*.15),errors:Math.round(p[3]*.2)},
+    {ward:'4th Floor',audited:Math.max(0,Math.round(p[2]*.1)),errors:0}
+  ];
+  return {period,periodLabel:p[0],date:p[1],isMonth:month, 
+    totalSlots:month?null:70,audited:p[2],pending:month?null:70-p[2],
+    percent:month?null:Math.round(100*p[2]/70),errors:p[3],interactions:p[4],
+    iv:p[5],chemo:p[6],oral:p[7],daysWithAudits:month?4:1,
+    daysElapsed:month?4:null,
+    note:month?'Month-to-date totals count saved audits. No daily target is assumed for non-audit days.':'',
+    wards:wards,categories:[{category:'Prescription error',count:Math.min(2,p[3])},{category:'Administration error',count:Math.max(0,p[3]-2)}],
+    daily:month?[
+      {date:'2026-11-04',audited:35,errors:3},
+      {date:'2026-11-03',audited:56,errors:4},
+      {date:'2026-11-02',audited:62,errors:1},
+      {date:'2026-11-01',audited:49,errors:3}
+    ]:[],
+    findings:month?[]:[{patientName:'Demo Patient',ward:'PHO',cubic:'A',bed:'A1',category:'Prescription error',details:'Fictional teaching example'}]
+  };
+}
+// A small fake Apps Script API lets the original HTML layout run entirely offline.
+window.google={script:{get run(){
+  let yes=()=>{},no=()=>{};
+  const handler={
+    withSuccessHandler(fn){yes=fn;return handler;},
+    withFailureHandler(fn){no=fn;return handler;},
+    phoMobileBootstrap(){setTimeout(()=>yes(JSON.parse(JSON.stringify(exampleState))),0);return handler;},
+    phoMobileSmartSummaryHistory(period){setTimeout(()=>yes(report(period)),0);return handler;},
+    phoMobileCheckUpdate(){setTimeout(()=>yes({release:'2026.11.04.1',url:''}),0);return handler;}
+  };
+  return handler;
+}}};
+document.addEventListener('click',function(e){
+  if(e.target.closest('#saveOnly,#saveNext,#settingsSave,#confirmHandover,#startToday')){
+    e.preventDefault();e.stopImmediatePropagation();
+    alert('Offline preview: saving is disabled.');
+  }
+},true);
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+
+const PHO_CLIENT_RELEASE =
+  "2026.11.04.1";
+
+const $=id=>document.getElementById(id);
+
+/* ===========================================
+   PHO/BMT — OPENING VERSION NOTIFICATION
+   =========================================== */
+
+// Leave blank to use the existing release value.
+// Show the current Smart Summary History release in the launch notice.
+const PHO_DEPLOYMENT_VERSION_LABEL = 'V5.4 · History';
+
+function phoShowLaunchVersion() {
+
+  const version = String(
+    PHO_DEPLOYMENT_VERSION_LABEL ||
+    PHO_CLIENT_RELEASE ||
+    ''
+  ).trim();
+
+  if (!version) return;
+
+  $('phoLaunchVersion').textContent =
+    'Updated to version ' + version;
+
+  $('phoLaunchFlash').hidden = false;
+
+  window.setTimeout(() => {
+    $('phoLaunchFlash').hidden = true;
+  }, 1400);
+
+}
+
+
+const KEYS=[
+  'patientName','patientId','ward','cubic','bed','ivf',
+  'iv','chemo','oral','interaction','error','errorCode',
+  'details'
+];
+
+const BOOL=[
+  'iv','chemo','oral','interaction','error'
+];
+
+const WARDS=[
+  ['PHO',''],
+  ['BMT',''],
+  ['Daycare','20 beds'],
+  ['4th Floor','15 beds'],
+  ['Private I',''],
+  ['Private II','']
+];
+
+const WARD_TONES=[
+  '#e7e9fc','#dcf1e6','#fff0d8',
+  '#e0effb','#f9e5eb','#f7e6ed'
+];
+
+const WARD_ICONS=[
+  'dna','bone','sun','building','bed','bed'
+];
+
+const WARD_ICON_COLORS=[
+  '#7c75cd','#50a992','#d3a043',
+  '#6099c8','#c982a0','#c982a0'
+];
+
+const CUBES=['A','B','C','D','E','F'];
+
+const CUBE_TONES=[
+  '#f5ead6','#e3f4e4','#e1edfc',
+  '#fbe5d8','#ebe5fb','#f8e2e9'
+];
+
+const ERRORS=[
+  'Prescription error',
+  'Transcription error',
+  'Dispensing error',
+  'Administration error',
+  'Storage error',
+  'Others'
+];
+
+const LABELS={
+  pharmacist:'Clinical Pharmacist',
+  ward:'Ward list',
+  cubic:'Cubicle list',
+  bed:'Bed list',
+  ivf:'Legacy IVF list',
+  errorCode:'Medication Error Codes'
+};
+
+let state=null;
+let form=null;
+let slot=0;
+let busy=false;
+let viewMode='audit';
+let editing=null;
+let selectedPharm='';
+
+function message(t,type){
+  $('notice').textContent=t;
+  $('notice').className='message'+(type?' '+type:'');
+  $('notice').hidden=false;
+
+  if(type==='error'){
+    scrollTo({top:0,behavior:'smooth'});
+  }
+}
+
+function clearMessage(){
+  $('notice').hidden=true;
+}
+
+function setBusy(b){
+  busy=b;
+
+  for(const id of [
+    'saveOnly','saveNext','prev','next','jump',
+    'settingsButton','startToday','settingsSave',
+    'settingsCancel','settingsDone','settingsCategory',
+    'pharmacist','confirmHandover','ivfMinus','ivfPlus'
+  ]){
+    if($(id))$(id).disabled=b;
+  }
+}
+
+function clone(r){
+  const o={};
+
+  KEYS.forEach(k=>{
+    o[k]=r[k]||'';
+  });
+
+  return o;
+}
+
+function dirty(){
+  if(!state||!form)return false;
+
+  const prior=clone(state.rows[slot]);
+
+  return KEYS.some(k=>
+    String(form[k]||'')!==String(prior[k]||'')
+  );
+}
+
+function safeLeave(){
+  return !dirty()||
+    confirm('Unsaved changes in this patient. Leave without saving?');
+}
+
+function list(key){
+  return state.options[key]||[];
+}
+
+function selectOptions(id,options,value){
+  const el=$(id);
+  el.replaceChildren();
+
+  const p=document.createElement('option');
+  p.value='';
+  p.textContent='Select Clinical Pharmacist';
+  el.appendChild(p);
+
+  for(const x of options){
+    const o=document.createElement('option');
+    o.value=x;
+    o.textContent=x;
+    el.appendChild(o);
+  }
+
+  if(value&&!options.includes(value)){
+    const o=document.createElement('option');
+    o.value=value;
+    o.textContent=value+' (previous selection)';
+    el.appendChild(o);
+  }
+
+  el.value=value||'';
+}
+
+function drawPharmacist(){
+  const active=state.pharmacist||'';
+
+  selectOptions(
+    'pharmacist',
+    list('pharmacist'),
+    selectedPharm||active
+  );
+
+  $('confirmHandover').hidden=!(
+    active&&selectedPharm&&selectedPharm!==active
+  );
+}
+
+function drawWards(){
+  const target=$('wardTiles');
+  target.replaceChildren();
+
+  WARDS.forEach(([ward,count],i)=>{
+    const b=document.createElement('button');
+    b.type='button';
+
+    b.className='ward-btn'+(
+      form.ward===ward?' selected':''
+    );
+
+    b.style.setProperty('--tone',WARD_TONES[i]);
+    b.style.setProperty('--ward-ic',WARD_ICON_COLORS[i]);
+
+    const symbol=document.createElementNS(
+      'http://www.w3.org/2000/svg','svg'
+    );
+    symbol.classList.add('ward-symbol');
+    symbol.setAttribute('aria-hidden','true');
+
+    const use=document.createElementNS(
+      'http://www.w3.org/2000/svg','use'
+    );
+    use.setAttribute(
+      'href','#pho-icon-'+WARD_ICONS[i]
+    );
+
+    symbol.appendChild(use);
+    b.appendChild(symbol);
+
+    const title=document.createElement('strong');
+    title.textContent=ward;
+    b.appendChild(title);
+
+    if(count){
+      const small=document.createElement('small');
+      small.textContent=count;
+      b.appendChild(small);
+    }
+
+    b.setAttribute(
+      'aria-pressed',
+      String(form.ward===ward)
+    );
+
+    b.addEventListener('click',()=>{
+      if(form.ward!==ward){
+        form.ward=ward;
+        form.cubic='';
+        form.bed='';
+
+        if(ward!=='PHO'){
+          form.cubic='N/A';
+
+          if(
+            ward==='Private I'||
+            ward==='Private II'
+          ){
+            form.bed=ward;
+          }
+        }
+      }
+
+      drawLocation();
+      clearMessage();
+    });
+
+    target.appendChild(b);
+  });
+}
+
+function bedsForWard(){
+  if(
+    form.ward==='PHO'&&
+    CUBES.includes(form.cubic)
+  ){
+    return [1,2,3,4].map(n=>({
+      value:form.cubic+n,
+      label:form.cubic+n
+    }));
+  }
+
+  let prefix='';
+  let count=0;
+
+  if(form.ward==='BMT'){
+    prefix='BMT-';
+    count=10;
+  }
+
+  if(form.ward==='Daycare'){
+    prefix='DC-';
+    count=20;
+  }
+
+  if(form.ward==='4th Floor'){
+    prefix='4F-';
+    count=15;
+  }
+
+  return Array.from({length:count},(_,i)=>({
+    value:prefix+(i+1),
+    label:String(i+1)
+  }));
+}
+
+function drawLocation(){
+  drawWards();
+
+  $('cubicSection').hidden=form.ward!=='PHO';
+
+  $('bedSection').hidden=(
+    !form.ward||
+    form.ward==='Private I'||
+    form.ward==='Private II'||
+    !WARDS.some(x=>x[0]===form.ward)
+  );
+
+  const cub=$('cubicTiles');
+  cub.replaceChildren();
+
+  if(form.ward==='PHO'){
+    for(let i=0;i<6;i++){
+      const c=CUBES[i];
+      const b=document.createElement('button');
+
+      b.type='button';
+      b.className='cube'+(
+        form.cubic===c?' selected':''
+      );
+      b.textContent=c;
+      b.style.setProperty('--tone',CUBE_TONES[i]);
+
+      b.setAttribute(
+        'aria-pressed',
+        String(form.cubic===c)
+      );
+
+      b.addEventListener('click',()=>{
+        if(form.cubic!==c){
+          form.cubic=c;
+          form.bed='';
+        }
+
+        drawLocation();
+        clearMessage();
+      });
+
+      cub.appendChild(b);
+    }
+  }
+
+  const beds=$('bedTiles');
+  beds.replaceChildren();
+
+  const available=bedsForWard();
+
+  $('bedHint').textContent=
+    form.ward==='PHO'
+      ?'Cubicle '+(form.cubic||'—')
+      :form.ward;
+
+  if(!$('bedSection').hidden){
+    if(!available.length){
+      const small=document.createElement('div');
+      small.className='note';
+      small.textContent='Choose a cubicle first.';
+      beds.appendChild(small);
+    }else{
+      for(const x of available){
+        const b=document.createElement('button');
+        b.type='button';
+
+        b.className='bed'+
+          (form.ward==='PHO'?' bed-cubic':'')+
+          (form.bed===x.value?' selected':'');
+
+        b.textContent=x.label;
+
+        if(form.ward==='PHO'){
+          b.style.setProperty(
+            '--tone',
+            CUBE_TONES[CUBES.indexOf(form.cubic)]
+          );
+        }
+
+        b.setAttribute(
+          'aria-pressed',
+          String(form.bed===x.value)
+        );
+
+        b.addEventListener('click',()=>{
+          form.bed=x.value;
+          drawLocation();
+          clearMessage();
+        });
+
+        beds.appendChild(b);
+      }
+    }
+  }
+}
+
+function drawYesNo(){
+  document.querySelectorAll('[data-question]')
+    .forEach(target=>{
+      target.replaceChildren();
+
+      const key=target.dataset.question;
+
+      
+for(const v of (
+  ['iv','chemo','oral'].includes(key)
+    ? ['no','yes']
+    : ['yes','no']
+)){
+
+        const b=document.createElement('button');
+        b.type='button';
+
+        const safetyFinding=(
+          key==='interaction'||key==='error'
+        );
+
+        const isGood=(
+          (v==='yes'&&!safetyFinding)||
+          (v==='no'&&safetyFinding)
+        );
+
+        b.className=
+          'choice '+
+          (isGood?'good':'bad')+
+          (form[key]===v?' selected':'');
+
+        b.textContent=v.toUpperCase();
+        b.setAttribute(
+          'aria-pressed',
+          String(form[key]===v)
+        );
+
+        b.addEventListener('click',()=>{
+          form[key]=v;
+
+          if(key==='error'&&v==='no'){
+            form.errorCode='';
+            form.details='';
+            $('details').value='';
+          }
+
+          drawYesNo();
+          drawErrors();
+          clearMessage();
+        });
+
+        target.appendChild(b);
+      }
+    });
+}
+
+function drawErrors(){
+  $('errorDetails').hidden=form.error!=='yes';
+
+  const target=$('errorTiles');
+  target.replaceChildren();
+
+  ERRORS.forEach(name=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='err-tile'+(
+      form.errorCode===name?' selected':''
+    );
+    b.textContent=name;
+
+    b.setAttribute(
+      'aria-pressed',
+      String(form.errorCode===name)
+    );
+
+    b.addEventListener('click',()=>{
+      form.errorCode=name;
+      drawErrors();
+      clearMessage();
+    });
+
+    target.appendChild(b);
+  });
+
+  if(
+    form.errorCode&&
+    !ERRORS.includes(form.errorCode)
+  ){
+    const old=document.createElement('div');
+    old.className='legacy';
+    old.style.gridColumn='1/-1';
+
+    old.textContent=
+      'Older saved code: '+form.errorCode+
+      '. Choose a standard category if changing it.';
+
+    target.appendChild(old);
+  }
+}
+
+function drawRow(scroll){
+  const r=state.rows[slot];
+  form=clone(r);
+
+  $('patientNumber').textContent=String(slot+1);
+  $('auditDate').textContent=state.date;
+
+  $('recordStatus').textContent=
+    r.status==='Saved'?'Saved ✓':r.status||'Not saved';
+
+  $('recordStatus').className=
+    'pill'+(r.status==='Saved'?' saved':'');
+
+  $('patientName').value=form.patientName;
+  $('patientId').value=form.patientId;
+  $('ivfRate').value=form.ivf;
+  $('details').value=form.details;
+  $('jump').value=String(slot+1);
+
+  $('prev').disabled=busy||slot===0;
+  $('next').disabled=busy||slot===69;
+
+  $('saveNext').textContent=
+    slot===69
+      ?'Save Patient 70'
+      :'Save & Next Patient ›';
+
+  drawPharmacist();
+  drawLocation();
+  drawYesNo();
+  drawErrors();
+
+  if(scroll){
+    scrollTo({top:0,behavior:'smooth'});
+  }
+}
+
+function drawProgress(){
+  const saved=state.rows.filter(r=>
+    r.status==='Saved'
+  );
+  const n=saved.length;
+
+  $('percent').textContent=
+    Math.round(n/70*100)+'%';
+
+  $('savedCount').textContent=n+' of 70 saved';
+
+  $('progressFill').style.width=
+    (n/70*100)+'%';
+
+  $('errorCount').textContent=
+    saved.filter(r=>r.error==='yes').length+
+    ' errors recorded';
+}
+
+function switchView(name){
+  viewMode=name;
+
+  $('auditScreen').hidden=name!=='audit';
+  $('smartSummaryScreen').hidden=name!=='summary';
+  $('settingsScreen').hidden=name!=='settings';
+  $('actionbar').hidden=name!=='audit';
+
+  $('smartPatientTab').classList.toggle(
+    'active',name==='audit'
+  );
+  $('smartPatientTab').setAttribute(
+    'aria-selected',String(name==='audit')
+  );
+
+  $('smartSummaryTab').classList.toggle(
+    'active',name==='summary'
+  );
+  $('smartSummaryTab').setAttribute(
+    'aria-selected',String(name==='summary')
+  );
+
+  if(name==='settings'){
+    drawSettings();
+  }
+
+  if(name==='summary'){
+    loadSmartSummary();
+  }
+
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+function paint(){
+  if(!state)return;
+
+  $('loading').hidden=true;
+  $('main').hidden=false;
+
+  const old=state.date!==state.today;
+
+  $('dayBanner').hidden=!old;
+  $('startToday').hidden=!old;
+
+  if(old){
+    $('dayBanner').textContent=
+      'The saved audit date is '+state.date+
+      '. Resolve unfinished records before starting '+
+      state.today+'.';
+  }
+
+  drawProgress();
+  drawRow(false);
+  switchView('audit');
+
+  if(!list('pharmacist').length){
+    message(
+      'Add a Clinical Pharmacist in Default Settings before saving.',
+      'error'
+    );
+  }
+}
+
+
+
+
+function load() {
+  setBusy(true);
+
+
+
+  google.script.run
+    .withSuccessHandler(data => {
+      state = data;
+      slot = 0;
+      selectedPharm = data.pharmacist || '';
+
+      
+setBusy(false);
+paint();
+phoShowLaunchVersion();
+
+
+      // Check for updates after the main screen loads.
+      setTimeout(phoCheckForUpdate, 1200);
+    })
+    .withFailureHandler(e => {
+      setBusy(false);
+
+      $('loading').textContent =
+        'Cannot open audit: ' +
+        (e.message || String(e));
+    })
+    .phoMobileBootstrap();
+}
+
+
+function navigate(n){
+  if(!Number.isInteger(n)||n<1||n>70){
+    $('jump').value=slot+1;
+    return;
+  }
+
+  if(!safeLeave()){
+    $('jump').value=slot+1;
+    return;
+  }
+
+  slot=n-1;
+  clearMessage();
+  drawRow(true);
+}
+
+function save(next){
+  if(busy||!state)return;
+  clearMessage();
+
+  if(state.date!==state.today){
+    message(
+      'Old audit date. Refresh the app to start today.',
+      'error'
+    );
+    return;
+  }
+
+  const pharma=
+    selectedPharm||
+    state.pharmacist||
+    $('pharmacist').value;
+
+  if(!pharma){
+    message('Select Clinical Pharmacist.','error');
+    return;
+  }
+
+  if(state.pharmacist&&pharma!==state.pharmacist){
+    message(
+      'Confirm pharmacist handover before saving.',
+      'error'
+    );
+    return;
+  }
+
+  if(
+    !form.patientName.trim()||
+    !/^[0-9]+$/.test(form.patientId)
+  ){
+    message(
+      'Enter Patient Name and numeric Patient ID.',
+      'error'
+    );
+    return;
+  }
+
+  const where=bedsForWard().some(x=>
+    x.value===form.bed
+  );
+
+  const isPrivate=[
+    'Private I','Private II'
+  ].includes(form.ward);
+
+  const previous=state.rows[slot];
+
+  const isLegacy=
+    !!previous.recordId&&
+    form.ward===previous.ward&&
+    form.cubic===previous.cubic&&
+    form.bed===previous.bed;
+
+  if(
+    !WARDS.some(x=>x[0]===form.ward)&&
+    !isLegacy
+  ){
+    message('Select an approved ward.','error');
+    return;
+  }
+
+  if(!(
+    (
+      form.ward==='PHO'&&
+      CUBES.includes(form.cubic)&&
+      where
+    )||
+    (
+      isPrivate&&
+      form.cubic==='N/A'&&
+      form.bed===form.ward
+    )||
+    (
+      form.cubic==='N/A'&&
+      where
+    )||
+    isLegacy
+  )){
+    message(
+      'Choose the matching cubicle and bed.',
+      'error'
+    );
+    return;
+  }
+
+  if(
+    form.ivf===''||
+    !/^(?:\d{1,3})(?:\.\d{1,2})?$/.test(
+      String(form.ivf)
+    )||
+    Number(form.ivf)>200
+  ){
+    message(
+      'IVF rate must be a number from 0 to 200 mL/hr.',
+      'error'
+    );
+    return;
+  }
+
+  for(const k of BOOL){
+    if(!['yes','no'].includes(form[k])){
+      message(
+        'Answer YES or NO for every medication question.',
+        'error'
+      );
+      return;
+    }
+  }
+
+  if(
+    form.error==='yes'&&
+    (!form.errorCode||!form.details.trim())
+  ){
+    message(
+      'Choose medication error category and describe the finding.',
+      'error'
+    );
+    return;
+  }
+
+  if(form.error==='no'){
+    form.errorCode='';
+    form.details='';
+  }
+
+  const idx=slot;
+  const payload={
+    ...form,
+    number:idx+1,
+    date:state.date,
+    pharmacist:pharma,
+    signature:state.rows[idx].signature
+  };
+
+  setBusy(true);
+
+  google.script.run
+    .withSuccessHandler(data=>{
+      state.rows[idx]=data.row;
+      state.pharmacist=data.pharmacist;
+      selectedPharm=data.pharmacist;
+
+      setBusy(false);
+      drawProgress();
+
+      if(next&&idx<69){
+        slot=idx+1;
+      }
+
+      drawRow(true);
+
+      message(
+        'Patient '+(idx+1)+' saved successfully.',
+        'success'
+      );
+    })
+    .withFailureHandler(e=>{
+      setBusy(false);
+      message(e.message||String(e),'error');
+    })
+    .phoMobileSavePatient(payload);
+}
+
+function stepRate(delta){
+  if(busy)return;
+
+  const val=form.ivf===''?0:Number(form.ivf);
+
+  const clamped=Math.max(
+    0,
+    Math.min(
+      200,
+      (Number.isFinite(val)?val:0)+delta
+    )
+  );
+
+  form.ivf=String(clamped);
+  $('ivfRate').value=form.ivf;
+  clearMessage();
+}
+
+function drawSettings(){
+  const key=$('settingsCategory').value;
+  const items=list(key);
+
+  $('settingsListTitle').textContent=LABELS[key];
+
+  const target=$('settingsList');
+  target.replaceChildren();
+
+  for(const item of items){
+    const value=key==='bed'?item.name:item;
+    const cubic=key==='bed'?item.cubicle:'';
+
+    const row=document.createElement('div');
+    row.className='setting-item';
+
+    const label=document.createElement('span');
+    label.className='setting-text';
+    label.textContent=value+(cubic?' · '+cubic:'');
+    row.appendChild(label);
+
+    const editBtn=document.createElement('button');
+    editBtn.className='minibtn';
+    editBtn.type='button';
+    editBtn.textContent='Edit';
+
+    editBtn.addEventListener('click',()=>{
+      editing={value,cubic};
+      $('settingsValue').value=value;
+
+      $('settingsActionTitle').textContent=
+        'Edit option';
+
+      $('settingsSave').textContent=
+        'Save change';
+
+      if(key==='bed'){
+        $('bedScope').value=cubic;
+      }
+    });
+
+    const del=document.createElement('button');
+    del.className='minibtn danger';
+    del.type='button';
+    del.textContent='Remove';
+
+    del.addEventListener('click',()=>{
+      if(!confirm(
+        'Remove '+value+
+        ' from choices? Previously saved patient records are preserved.'
+      )){
+        return;
+      }
+
+      updateSettings({
+        action:'delete',
+        key,
+        value:'',
+        cubicle:'',
+        oldValue:value,
+        oldCubicle:cubic
+      });
+    });
+
+    row.appendChild(editBtn);
+    row.appendChild(del);
+    target.appendChild(row);
+  }
+
+  if(!items.length){
+    target.textContent='No options entered.';
+  }
+
+  $('bedScopeField').hidden=key!=='bed';
+
+  if(key==='bed'){
+    const sel=$('bedScope');
+    sel.replaceChildren();
+
+    for(const v of ['',...list('cubic')]){
+      const op=document.createElement('option');
+      op.value=v;
+      op.textContent=v||'All cubicles';
+      sel.appendChild(op);
+    }
+  }
+
+  if(!editing){
+    $('settingsActionTitle').textContent=
+      'Add new option';
+
+    $('settingsSave').textContent=
+      'Add option';
+
+    $('settingsValue').value='';
+  }
+}
+
+function resetSettings(){
+  editing=null;
+  $('settingsValue').value='';
+  drawSettings();
+}
+
+function updateSettings(payload){
+  setBusy(true);
+
+  google.script.run
+    .withSuccessHandler(data=>{
+      state.options=data.options;
+      setBusy(false);
+      resetSettings();
+      message('Settings saved.','success');
+    })
+    .withFailureHandler(e=>{
+      setBusy(false);
+      message(e.message||String(e),'error');
+    })
+    .phoMobileSettingsUpdate(payload);
+}
+
+$('patientName').addEventListener('input',e=>{
+  e.target.value=e.target.value.toUpperCase();
+  form.patientName=e.target.value;
+});
+
+$('patientId').addEventListener('input',e=>{
+  e.target.value=e.target.value.replace(/[^0-9]/g,'');
+  form.patientId=e.target.value;
+});
+
+$('details').addEventListener('input',e=>{
+  form.details=e.target.value;
+});
+
+$('ivfRate').addEventListener('input',e=>{
+  form.ivf=e.target.value.trim();
+});
+
+$('ivfMinus').addEventListener(
+  'click',()=>stepRate(-20)
+);
+
+$('ivfPlus').addEventListener(
+  'click',()=>stepRate(20)
+);
+
+$('pharmacist').addEventListener('change',e=>{
+  selectedPharm=e.target.value;
+  drawPharmacist();
+  clearMessage();
+});
+
+$('confirmHandover').addEventListener('click',()=>{
+  if(busy||!state)return;
+
+  const old=state.pharmacist||'';
+  const next=selectedPharm||'';
+
+  if(!old||!next||old===next)return;
+
+  if(!confirm(
+    'Change pharmacist to '+next+
+    ' for new patient saves?'
+  )){
+    return;
+  }
+
+  setBusy(true);
+
+  google.script.run
+    .withSuccessHandler(data=>{
+      state.pharmacist=data.pharmacist;
+      selectedPharm=data.pharmacist;
+
+      setBusy(false);
+      drawPharmacist();
+      message(
+        'Pharmacist handover confirmed.',
+        'success'
+      );
+    })
+    .withFailureHandler(e=>{
+      setBusy(false);
+      message(e.message||String(e),'error');
+    })
+    .phoMobileChangePharmacist({
+      date:state.date,
+      expected:old,
+      pharmacist:next
+    });
+});
+
+$('prev').addEventListener('click',()=>
+  navigate(slot)
+);
+
+$('next').addEventListener('click',()=>
+  navigate(slot+2)
+);
+
+$('jump').addEventListener('change',e=>{
+  navigate(Number(e.target.value));
+});
+
+$('jump').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    $('jump').blur();
+    navigate(Number(e.target.value));
+  }
+});
+
+$('saveOnly').addEventListener('click',()=>
+  save(false)
+);
+
+$('saveNext').addEventListener('click',()=>
+  save(true)
+);
+
+$('settingsButton').addEventListener('click',()=>{
+  if(busy)return;
+
+  if(viewMode==='audit'&&!safeLeave()){
+    return;
+  }
+
+  editing=null;
+
+  const goingBack=viewMode==='settings';
+
+  switchView(
+    goingBack?'audit':'settings'
+  );
+
+  if(goingBack){
+    drawRow(false);
+  }
+});
+
+$('settingsDone').addEventListener('click',()=>{
+  switchView('audit');
+  drawRow(false);
+});
+
+$('settingsCategory').addEventListener('change',()=>{
+  editing=null;
+  drawSettings();
+});
+
+$('settingsSave').addEventListener('click',()=>{
+  const key=$('settingsCategory').value;
+  const value=$('settingsValue').value.trim();
+
+  if(!value){
+    message('Type an option.','error');
+    return;
+  }
+
+  updateSettings({
+    action:editing?'edit':'add',
+    key,
+    value,
+    cubicle:key==='bed'
+      ?$('bedScope').value:'',
+    oldValue:editing?editing.value:'',
+    oldCubicle:editing?editing.cubic:''
+  });
+});
+
+$('settingsCancel').addEventListener(
+  'click',resetSettings
+);
+
+$('startToday').addEventListener('click',()=>{
+  if(
+    !safeLeave()||
+    !confirm(
+      'Start today? Saved patients remain archived. Unfinished entries block this action.'
+    )
+  ){
+    return;
+  }
+
+  setBusy(true);
+
+  google.script.run
+    .withSuccessHandler(data=>{
+      state=data;
+      slot=0;
+      selectedPharm=data.pharmacist||'';
+
+      setBusy(false);
+      paint();
+
+      message(
+        "Today's audit is ready.",
+        'success'
+      );
+    })
+    .withFailureHandler(e=>{
+      setBusy(false);
+      message(e.message||String(e),'error');
+    })
+    .phoMobileStartToday();
+});
+
+window.addEventListener('beforeunload',e=>{
+  if(!busy&&dirty()){
+    e.preventDefault();
+    e.returnValue='';
+  }
+});
+
+/*
+ * Golden update notification
+ * Checks published release without changing patient data.
+ */
+let phoUpdateRequestPending=false;
+
+function phoCheckForUpdate(){
+  if(
+    phoUpdateRequestPending||
+    document.hidden||
+    !window.google||
+    !google.script||
+    !google.script.run
+  ){
+    return;
+  }
+
+  phoUpdateRequestPending=true;
+
+  google.script.run
+    .withSuccessHandler(info=>{
+      phoUpdateRequestPending=false;
+
+      if(
+        !info||
+        !info.release||
+        info.release===PHO_CLIENT_RELEASE
+      ){
+        return;
+      }
+
+      const url=String(info.url||'');
+
+      if(!/^https:\/\/script\.google\.com\/macros\/s\/[^/?#]+\/exec$/.test(url)){
+        return;
+      }
+
+      $('phoUpdateLink').href=url;
+      $('phoUpdateBanner').hidden=false;
+    })
+    .withFailureHandler(()=>{
+      phoUpdateRequestPending=false;
+    })
+    .phoMobileCheckUpdate();
+}
+
+$('phoUpdateLink').addEventListener('click',event=>{
+  const unconfirmedHandover=!!(
+    state&&selectedPharm&&
+    selectedPharm!==state.pharmacist
+  );
+
+  const unsavedSettings=(
+    viewMode==='settings'&&
+    !!$('settingsValue').value.trim()
+  );
+
+  if(
+    busy||
+    dirty()||
+    unconfirmedHandover||
+    unsavedSettings
+  ){
+    event.preventDefault();
+
+    message(
+      'Save or finish your current changes before updating. Your work has not been discarded.',
+      'error'
+    );
+  }
+});
+
+// Check on opening, every 2 minutes and when returning.
+phoCheckForUpdate();
+
+setInterval(
+  phoCheckForUpdate,
+  120000
+);
+
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden){
+    phoCheckForUpdate();
+  }
+});
+
+/*
+ * SMART SUMMARY — Today, previous 3 days and current month.
+ * Reads historical saved Patient Records through read-only server function.
+ * Never clears unsaved patient entries.
+ */
+let smartRequestPending=false;
+let smartSelectedPeriod='today';
+
+function setSmartValue(id,value){
+  $(id).textContent=String(value===null||value===undefined?'—':value);
+}
+
+function drawSmartPeriodButtons(){
+  document.querySelectorAll('[data-smart-period]').forEach(btn=>{
+    const on=btn.dataset.smartPeriod===smartSelectedPeriod;
+    btn.setAttribute('aria-pressed',String(on));
+  });
+}
+
+document.querySelectorAll('[data-smart-period]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const period=btn.dataset.smartPeriod;
+    if(period===smartSelectedPeriod)return;
+    smartSelectedPeriod=period;
+    drawSmartPeriodButtons();
+    if(viewMode==='summary')loadSmartSummary();
+  });
+});
+
+function loadSmartSummary(){
+  if(smartRequestPending||!state)return;
+  smartRequestPending=true;
+  const requested=smartSelectedPeriod;
+  $('smartCompletion').textContent='Loading saved audits…';
+  $('smartPeriodNote').textContent='';
+
+  google.script.run
+    .withSuccessHandler(data=>{
+      smartRequestPending=false;
+      if(viewMode!=='summary')return;
+      if(requested!==smartSelectedPeriod){
+        loadSmartSummary();
+        return;
+      }
+      renderSmartSummary(data);
+    })
+    .withFailureHandler(e=>{
+      smartRequestPending=false;
+      if(viewMode!=='summary')return;
+      if(requested!==smartSelectedPeriod){
+        loadSmartSummary();
+        return;
+      }
+      $('smartCompletion').textContent=
+        'Unable to load summary: '+(e.message||String(e));
+    })
+    .phoMobileSmartSummaryHistory(requested);
+}
+
+function renderSmartSummary(d){
+  const monthly=!!d.isMonth;
+  setSmartValue('smartDate',d.date||'—');
+  setSmartValue('smartKicker',monthly ?
+    'Monthly clinical report · saved audits only' :
+    'Daily clinical report · saved audits only');
+  setSmartValue('smartPeriodNote',d.note||'');
+  setSmartValue('smartAuditedLabel',monthly?'Patient audits saved':'Patients audited');
+  setSmartValue('smartErrorsLabel',monthly?'Audits with medication errors':'Patients with medication errors');
+  setSmartValue('smartAudited',d.audited);
+  setSmartValue('smartPendingLabel',monthly?'Days with saved audits':'Pending audits');
+  setSmartValue('smartPending',monthly?d.daysWithAudits:d.pending);
+  setSmartValue('smartInteractions',d.interactions);
+  setSmartValue('smartErrors',d.errors);
+  setSmartValue('smartIV',d.iv+(monthly?' audits':' patients'));
+  setSmartValue('smartChemo',d.chemo+(monthly?' audits':' patients'));
+  setSmartValue('smartOral',d.oral+(monthly?' audits':' patients'));
+
+  const meter=$('smartMeter').parentElement;
+  meter.hidden=monthly;
+  $('smartMeter').style.width=monthly?'0%':(d.percent||0)+'%';
+  setSmartValue('smartCompletion',monthly ?
+    d.audited+' saved patient audits · '+d.daysWithAudits+
+    ' day(s) with saved audits · month to date' :
+    d.audited+' of '+d.totalSlots+
+    ' patient audits completed · '+d.percent+'%');
+
+  const dailyCard=$('smartMonthlyDaily');
+  dailyCard.hidden=!monthly;
+  const dailyList=$('smartDailyList');
+  dailyList.replaceChildren();
+  if(monthly){
+    (d.daily||[]).forEach(item=>{
+      const row=document.createElement('div');
+      row.className='smart-daily-row'+(item.audited?'':' empty');
+      [item.date,item.audited,item.errors].forEach((value,i)=>{
+        const el=document.createElement(i?'strong':'span');
+        el.textContent=String(value);
+        row.appendChild(el);
+      });
+      dailyList.appendChild(row);
+    });
+  }
+
+  const wards=$('smartWards');
+  wards.replaceChildren();
+  (d.wards||[]).forEach(w=>{
+    const row=document.createElement('div');
+    row.className='smart-wardrow';
+    [w.ward,w.audited,w.errors].forEach((value,i)=>{
+      const el=document.createElement(i?'strong':'span');
+      el.textContent=String(value);
+      row.appendChild(el);
+    });
+    wards.appendChild(row);
+  });
+
+  const errors=$('smartErrorContent');
+  errors.replaceChildren();
+  if(!d.errors){
+    const zero=document.createElement('div');
+    zero.className='smart-zero';
+    zero.textContent=d.audited===0 ?
+      'No saved patient audits for this period.' :
+      '✓ No medication errors recorded in saved audits';
+    errors.appendChild(zero);
+    return;
+  }
+
+  const head=document.createElement('div');
+  head.className='smart-error-head';
+  const number=document.createElement('strong');
+  number.textContent=String(d.errors).padStart(2,'0');
+  const label=document.createElement('span');
+  label.textContent='Saved patient audits with a medication error finding';
+  head.append(number,label);
+  errors.appendChild(head);
+
+  (d.categories||[]).filter(c=>c.count>0).forEach(c=>{
+    const row=document.createElement('div');
+    row.className='smart-line';
+    const title=document.createElement('span');
+    title.textContent=c.category;
+    const count=document.createElement('strong');
+    count.textContent=String(c.count);
+    row.append(title,count);
+    errors.appendChild(row);
+  });
+
+  // Monthly summary is aggregated only; no patient-identifying information.
+  if(monthly){
+    const foot=document.createElement('div');
+    foot.className='smart-subtle';
+    foot.style.marginTop='12px';
+    foot.textContent='Monthly details are aggregate only. Open an individual daily report for its recorded findings.';
+    errors.appendChild(foot);
+    return;
+  }
+
+  const findings=d.findings||[];
+  if(findings.length){
+    const findingTitle=document.createElement('div');
+    findingTitle.className='card-title';
+    findingTitle.style.marginTop='15px';
+    findingTitle.textContent='Recorded findings';
+    errors.appendChild(findingTitle);
+  }
+
+  findings.forEach(f=>{
+    const card=document.createElement('div');
+    card.className='smart-finding';
+    const name=document.createElement('strong');
+    name.textContent=f.patientName||'Patient name not recorded';
+    name.style.cssText='display:block;font-size:13px;font-weight:850;color:#23435b;margin-bottom:7px';
+    const location=document.createElement('div');
+    location.style.cssText='font-size:12px;color:#5d7786;line-height:1.5;margin-bottom:7px';
+    const place=[f.ward,f.cubic==='N/A'?'':f.cubic].filter(Boolean).join(' · ');
+    if(place)location.appendChild(document.createTextNode(place));
+    if(f.bed){
+      if(place)location.appendChild(document.createTextNode(' · '));
+      const bed=document.createElement('strong');
+      bed.textContent='Bed '+f.bed;
+      bed.style.cssText='font-size:12px;font-weight:850;color:#23435b';
+      location.appendChild(bed);
+    }
+    const heading=document.createElement('strong');
+    heading.textContent=f.category||'Unspecified';
+    heading.style.display='block';
+    const description=document.createElement('p');
+    description.textContent=f.details||'No description entered';
+    card.append(name,location,heading,description);
+    errors.appendChild(card);
+  });
+
+  const foot=document.createElement('div');
+  foot.className='smart-subtle';
+  foot.style.marginTop='10px';
+  foot.textContent='Error counts mean patient audits with an error finding, not separate error events. Patient details are for authorized clinical staff only.';
+  errors.appendChild(foot);
+}
+
+$('smartPatientTab').addEventListener('click',()=>{
+  if(busy)return;
+
+  if(
+    viewMode==='summary'||
+    viewMode==='settings'
+  ){
+    switchView('audit');
+  }
+});
+
+$('smartSummaryTab').addEventListener('click',()=>{
+  if(busy||viewMode==='summary'){
+    return;
+  }
+
+  switchView('summary');
+});
+
+$('smartBack').addEventListener('click',()=>{
+  switchView('audit');
+});
+
+$('smartRefresh').addEventListener(
+  'click',loadSmartSummary
+);
+
+load();
+
+})();
+</script>
+</body>
+</html>
