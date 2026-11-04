@@ -3258,7 +3258,7 @@ phoErrorsTile.addEventListener('keydown', e=>{
   `;
   document.head.appendChild(style);
   function syncSpinner(){
-    const loading=/\\b(?:loading|preparing)\\b/i.test(status.textContent);
+    const loading=/(?:loading|preparing)/i.test(status.textContent);
     status.classList.toggle('pho-loading',loading);
     status.setAttribute('aria-busy',String(loading));
   }
