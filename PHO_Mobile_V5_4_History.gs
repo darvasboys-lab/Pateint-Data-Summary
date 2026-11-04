@@ -19,7 +19,7 @@ const PHO_MOBILE_CONFIG = Object.freeze({
 });
 
 // Increase this value for every new deployment.
-const PHO_MOBILE_RELEASE = '2026.11.04.3';
+const PHO_MOBILE_RELEASE = '2026.11.04.4';
 const PHO_PUBLISHED_RELEASE_PROPERTY = 'PHO_PUBLISHED_RELEASE';
 
 function doGet() {
