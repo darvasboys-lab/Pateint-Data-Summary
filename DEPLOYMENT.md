@@ -1,7 +1,7 @@
 # V5.4 deployment and rollback guide
 
 ## Scope
-PGICH Noida PHO/BMT mobile patient-audit web app, **V5.4.1 Smart Summary UX**, release `2026.11.04.2`.
+PGICH Noida PHO/BMT mobile patient-audit web app, **V5.4.2 Smart Summary preload**, release `2026.11.04.3`.
 
 **Source control and Apps Script deployment are separate.** A GitHub commit does not modify the live hospital app.
 
@@ -16,7 +16,7 @@ PGICH Noida PHO/BMT mobile patient-audit web app, **V5.4.1 Smart Summary UX**, r
 2. Replace HTML file **PHO_Mobile_UI** with `PHO_Mobile_UI.html` (same file name without .html in Apps Script editor).
 3. Do **not** rerun `setupPHOPatientAuditUpgrade()`, `phoRepairAndFinishSetup()`, or `phoMobileInstallV3()` merely to apply this update.
 5. Save and test first against a **nonproduction copy with fictional records**.
-6. Verify five Smart Summary periods: Today, Yesterday, 2 Days Ago, 3 Days Ago, This Month.
+6. Verify five Smart Summary periods, including silent preloading while viewing Today, and explicit Refresh fetching new report data: Today, Yesterday, 2 Days Ago, 3 Days Ago, This Month.
 7. Verify new unsaved patients show a 20 mL/hr editable IVF default, and check saved patients keep their actual rate. Confirm Today is the default and This Month uses a separate full-width button row.
 8. Validate report dates using **Asia/Kolkata**, including November 1 going back to October 31.
 9. Check totals and errors against archive rows. Monthly total is a count of **saved audits**, not unique people.
