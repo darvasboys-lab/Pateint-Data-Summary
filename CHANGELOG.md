@@ -2,6 +2,15 @@
 
 All changes should be committed to this repository with a versioned commit message before a separate, explicitly authorized Apps Script deployment.
 
+## V5.4.2 — Smart Summary silent preload · 2026-11-04
+- Once Today renders, start all four historical period requests silently in the background.
+- Store responses only in the current page's memory; switching periods after preload has completed needs no new server call.
+- If a report is tapped while already loading, reuse the in-flight request rather than sending a duplicate.
+- Reset the cache on opening Smart Summary again and on explicit Refresh; discard late responses from older sessions.
+- Do not display stale counts while a period is still loading.
+- No patient data, cache or credentials are written to GitHub or browser persistent storage.
+- Server release: `2026.11.04.3`. The Apps Script web app still requires a manual deployment of the updated code.
+
 ## V5.4.1 FastLoad integration finalization — 2026-11-04
 - Compared the current V5.3 FastLoad and Mobile UI with V5.4.1.
 - Restored the UI call to `phoMobileFastBootstrap()`, preserving the existing optimized 70-patient loader.
