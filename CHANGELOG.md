@@ -2,6 +2,14 @@
 
 All changes should be committed to this repository with a versioned commit message before a separate, explicitly authorized Apps Script deployment.
 
+## V5.4.1 FastLoad integration finalization — 2026-11-04
+- Compared the current V5.3 FastLoad and Mobile UI with V5.4.1.
+- Restored the UI call to `phoMobileFastBootstrap()`, preserving the existing optimized 70-patient loader.
+- Added a public-safe snapshot of the V5.3 FastLoad implementation to the repository. Do not overwrite the installed FastLoad file during deployment.
+- Verified the FastLoad data contract and protected new-day behavior using fictional test records.
+- Confirmed the history endpoint remains read-only (9 simulated history tests, zero writes) and the four-plus-one period layout and editable IVF prefill work at 320px, 393px, and 768px.
+- **Only two files need updating in the existing hospital project:** Mobile Server.gs and PHO_Mobile_UI. GitHub commits do not deploy the hospital app.
+
 ## V5.4.1 — 2026-11-04
 - New, unsaved patient entries prefill the editable IVF Rate field to 20 mL/hr; stored values are not modified by viewing the form.
 - Opening Smart Summary always starts on Today, even after viewing a different period.
